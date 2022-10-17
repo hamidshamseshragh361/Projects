@@ -1,0 +1,41 @@
+-------------------------------------------------------------------- Char2Ascii-----------------------------------------------------------------------
+public string Char2Asci(string str) {
+    string Char2Asc = "";
+    for (int i = 0; i < str.Length; i++) {
+        char str1;
+        str1 =System.Convert.ToChar(str.Substring(i, 1));
+        int unicode;        
+        unicode =(int) str1;         
+        Char2Asc = Char2Asc + " " + unicode.ToString();
+    }
+    if (Char2Asc != "")
+        Char2Asc =Char2Asc.Substring(1,Char2Asc.Length- 1);
+    return Char2Asc;
+}
+
+function Char2Asci(str) {
+    var i;
+    var Char2Asc = "";
+    for (i = 0; i < str.length; i++) {
+        var str1;
+        str1 =str.substr(i, 1);
+        var unicode;
+        unicode = str1.charCodeAt(0);
+        Char2Asc = Char2Asc + " " + unicode.toString();
+    }
+    if (Char2Asc != "")
+        Char2Asc =Char2Asc.substr(1,Char2Asc.length- 1);
+    return Char2Asc;
+}
+
+-------------------------------------------------------------------- Ascii2Char-----------------------------------------------------------------------
+  public string Ascii2Char(string str)
+        {
+            if (str == null) return "";
+            string Ascii2Char = "";
+            string[] NewStr=str.Split(' ');
+            for(int i=0;i<NewStr.Length;i++)
+                if(NewStr[i] != "")
+                    Ascii2Char  = Ascii2Char + (char)(System.Convert.ToInt64(NewStr[i]));
+            return Ascii2Char;
+        }

@@ -1,0 +1,33 @@
+﻿HTML :
+ <asp:TextBox ID="txtDeleteFlag" runat="server" Width="0" Style="display: none"></asp:TextBox>
+
+JS :
+function btnDelete_Click() { 
+ var OK = window.confirm('آيا به حذف ردیف های سند مطمئن هستيد؟');
+ try 
+ {
+  document.getElementById('ctl00_MainContent_txtDeleteFlag').value = OK;
+ }
+ catch (e){} 
+}
+
+C#.NET :
+btnDelete.Attributes.Add("OnClick", "btnDelete_Click();this.value=' لطفا صبر کنيد...';this.className='Waiting'"); 
+protected void btnDelete_Click(object sender, EventArgs e)
+  {
+   if (Page.IsValid)
+   {
+    try
+    {    
+    if (txtDeleteFlag.Text == "true")
+     {
+     //Code
+     }
+    }
+    catch (Exception)
+    {
+     lblErrMsg.Text = Resources.GlobalMessages.DeleteMessageFail;
+     mpeError.Show();
+    }
+   }
+  } 

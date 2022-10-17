@@ -1,0 +1,2 @@
+EXEC sp_attach_db @dbname = N'ReportServer',@filename1 =N'G:\PowerBI_DataBase\ReportServer.mdf',@filename2 =N'G:\PowerBI_DataBase\ReportServer_log.ldf';
+EXEC sp_attach_db @dbname = N'ReportServerTempDB',@filename1 =N'G:\PowerBI_DataBase\ReportServerTempDB.mdf',@filename2 =N'G:\PowerBI_DataBase\ReportServerTempDB_log.ldf';

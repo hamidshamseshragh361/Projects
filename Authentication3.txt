@@ -1,0 +1,30 @@
+-----------------------------------------------------------------------------------------------------------------
+Post
+https://auth.services.centinsur.ir/api/security/login
+
+Body : ------>Form-Url-Encoded
+UserName  :  asia.bedehkar
+Password   :  WRUQ3r2h5S
+
+خروجی :
+Deserialize
+-----------------------------------------------------------------------------------------------------------------
+Get
+https://irc.services.centinsur.ir/api/Cisb/GetAdab/52-015629
+https://irc.services.centinsur.ir/api/Cisb/GetExam/0081899394/1100101627
+
+Headers :
+Authorization  : Bearer Data
+
+خروجی :
+Deserialize
+-----------------------------------------------------------------------------------------------------------------
+Post
+https:/irc.services.centinsur.ir/api/Cisb/GetInquiryAsync
+
+Headers :
+Authorization  : Bearer Data
+
+Body : {  Data  }
+
+-----------------------------------------------------------------------------------------------------------------

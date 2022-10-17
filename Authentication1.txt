@@ -1,0 +1,23 @@
+Method : Post
+https://bime.net.iraneit.com:3023/BimeApiManager_Release/api/EITAuthentication/GetAppToken
+appname : Sales
+secret : aA@12345
+
+Method : Post
+https://bime.net.iraneit.com:3023/BimeApiManager_Release/api/EITAuthentication/Login
+Username :   AsiaUser
+Password :    asiazxc123
+Apptoken : 73de4d87-b523-4fb7-a1c1-aaf1f9004931
+
+Apptoken : 73de4d87-b523-4fb7-a1c1-aaf1f9004931
+authenticationToken : 2af618b3-b64e-417b-b3fe-5216e1ff5853
+
+مشاهده بیمه نامه  درمان مسافرتی
+Method:Get
+https://bime.net.iraneit.com:3023/BimeApiManager_Release/Api/BimeApi/v2.0/travel/travel-policies/48197842
+authenticationToken : 2af618b3-b64e-417b-b3fe-5216e1ff5853
+Content-type : application/json
+CorpId :1434
+ContractId : 2
+Location : 11001
+

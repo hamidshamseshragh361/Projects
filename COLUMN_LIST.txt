@@ -1,0 +1,47 @@
+//sql2000
+SELECT    
+ INFORMATION_SCHEMA.COLUMNS.ORDINAL_POSITION AS POSITION, 
+        INFORMATION_SCHEMA.COLUMNS.TABLE_NAME, 
+        INFORMATION_SCHEMA.COLUMNS.COLUMN_NAME, 
+        INFORMATION_SCHEMA.COLUMNS.DATA_TYPE, 
+        INFORMATION_SCHEMA.COLUMNS.CHARACTER_MAXIMUM_LENGTH AS MAX_LENGTH, 
+        INFORMATION_SCHEMA.COLUMNS.COLUMN_DEFAULT, 
+        INFORMATION_SCHEMA.COLUMNS.IS_NULLABLE AS ALLOW_NULL,
+        sysproperties.value AS PropertyValue        
+FROM    sysobjects INNER JOIN sysproperties
+            ON sysobjects.id = sysproperties.id
+            LEFT JOIN syscolumns
+            ON sysproperties.smallid = syscolumns.colid
+            AND sysproperties.id = syscolumns.id
+            FULL JOIN INFORMATION_SCHEMA.COLUMNS
+            ON INFORMATION_SCHEMA.COLUMNS.TABLE_NAME=sysobjects.Name
+            AND INFORMATION_SCHEMA.COLUMNS.COLUMN_NAME=syscolumns.name
+WHERE INFORMATION_SCHEMA.COLUMNS.TABLE_NAME NOT IN ('dtproperties','MSpub_identity_range','sysarticles','sysarticleupdates','sysconstraints','sysextendedarticlesview','syspublications','sysschemaarticles','syssegments','syssubscriptions','systranschemas','MSreplication_subscriptions','MSsubscription_agents') AND
+            INFORMATION_SCHEMA.COLUMNS.TABLE_NAME NOT LIKE '%syncobj_0x%'
+ORDER BY INFORMATION_SCHEMA.COLUMNS.TABLE_NAME, 
+         INFORMATION_SCHEMA.COLUMNS.ORDINAL_POSITION 
+
+//sql2008,sql2012
+SELECT      
+        INFORMATION_SCHEMA.COLUMNS.ORDINAL_POSITION AS POSITION, 
+        INFORMATION_SCHEMA.COLUMNS.TABLE_NAME, 
+        INFORMATION_SCHEMA.COLUMNS.COLUMN_NAME, 
+        INFORMATION_SCHEMA.COLUMNS.DATA_TYPE, 
+        INFORMATION_SCHEMA.COLUMNS.CHARACTER_MAXIMUM_LENGTH AS MAX_LENGTH, 
+        INFORMATION_SCHEMA.COLUMNS.COLUMN_DEFAULT, 
+        INFORMATION_SCHEMA.COLUMNS.IS_NULLABLE AS ALLOW_NULL,
+        ep.value AS PropertyValue
+FROM        sys.objects o INNER JOIN sys.extended_properties ep
+            ON o.object_id = ep.major_id
+            INNER JOIN sys.schemas s
+            ON o.schema_id = s.schema_id
+            LEFT JOIN syscolumns c
+            ON ep.minor_id = c.colid
+            AND ep.major_id = c.id
+            FULL JOIN INFORMATION_SCHEMA.COLUMNS
+            ON INFORMATION_SCHEMA.COLUMNS.TABLE_NAME=o.name
+            AND INFORMATION_SCHEMA.COLUMNS.COLUMN_NAME=c.name    
+WHERE INFORMATION_SCHEMA.COLUMNS.TABLE_NAME NOT IN ('dtproperties','MSpub_identity_range','sysarticles','sysarticleupdates','sysconstraints','sysextendedarticlesview','syspublications','sysschemaarticles','syssegments','syssubscriptions','systranschemas','MSreplication_subscriptions','MSsubscription_agents') AND
+            INFORMATION_SCHEMA.COLUMNS.TABLE_NAME NOT LIKE '%syncobj_0x%'   
+ORDER BY INFORMATION_SCHEMA.COLUMNS.TABLE_NAME, 
+         INFORMATION_SCHEMA.COLUMNS.ORDINAL_POSITION 

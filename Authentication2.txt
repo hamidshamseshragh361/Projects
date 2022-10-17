@@ -1,0 +1,50 @@
+-----------------------------------------------------------------------------------------------------------------
+Post
+https://apimanager.iraneit.com/BimeApiManager/api/EITAuthentication/GetAppToken
+
+Headers:
+
+AppName  : AsiaService
+Secret  : As1a@3ervice
+-----------------------------------------------------------------------------------------------------------------
+Post
+https://apimanager.iraneit.com/BimeApiManager/api/EITAuthentication/Login
+
+Headers:
+
+Username : AsiaServiceUser
+Password : as1@123
+Apptoken : *****************
+-----------------------------------------------------------------------------------------------------------------
+Get
+https://apimanager.iraneit.com/BimeApiManager/api/BimeApi/v2.0/common/units
+https://apimanager.iraneit.com/BimeApiManager/api/BimeApi/v2.0/common/units/11001
+
+Headers:
+
+authenticationToken : ************
+CorpId  : 155
+ContractId : 27
+Content-type : application/json
+Location : 11001
+
+-----------------------------------------------------------------------------------------------------------------
+Get
+https://apimanager.iraneit.com/BimeApiManager/api/BimeApi/V2.0/common/code-list/unit-kind    نوع
+https://apimanager.iraneit.com/BimeApiManager/api/BimeApi/V2.0/common/code-list/ans             فعال است؟    
+https://apimanager.iraneit.com/BimeApiManager/api/BimeApi/v2.0/common/base-info/provinces   استان
+https://apimanager.iraneit.com/BimeApiManager/api/BimeApi/v2.0/common/base-info/cities          شهر
+https://apimanager.iraneit.com/BimeApiManager/api/BimeApi/v2.0/common/base-info/municipal-areas  منطقه شهرداری
+https://apimanager.iraneit.com/BimeApiManager/api/BimeApi/V2.0/common/code-list/person-kind    نوع شخص
+https://apimanager.iraneit.com/BimeApiManager/api/BimeApi/V2.0/common/code-list/Gender   جنسیت
+https://apimanager.iraneit.com/BimeApiManager/api/BimeApi/V2.0/common/code-list/education-level  تحصیلات
+https://apimanager.iraneit.com/BimeApiManager/api/BimeApi/V2.0/common/code-list/cii-validation-status   وضعیت اعتبار سنجی
+
+Headers:
+
+authenticationToken : ************
+CorpId  : 155
+ContractId : 27
+Content-type : application/json
+Location : 11001
+-----------------------------------------------------------------------------------------------------------------
