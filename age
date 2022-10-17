@@ -1,0 +1,62 @@
+onchange="txtBIRTH_DATE_change()"
+function txtBIRTH_DATE_change()
+{
+try{xmlHttp=new XMLHttpRequest();}catch(e){try{xmlHttp=new ActiveXOobject("Msxml2.XMLHTTP");}catch(e){xmlHttp=new ActiveXObject("Microsoft.XMLHTTP");}}
+if(xmlHttp==null){alert("Your browser does not support AJAX!");return;}
+Urlstr = "http://"+"<%=Request.ServerVariables["SERVER_NAME"]%>"+":";
+Urlstr = Urlstr + "<%=Request.ServerVariables["URL"]%>".replace("EditLifeInfo","EditLifeInfoHelper");
+Urlstr = Urlstr +"?Query_No=0&txtBIRTH_DATE="+Form1.txtBIRTH_DATE.value;
+Urlstr = Urlstr +"&sid="+Math.random();
+xmlHttp.onreadystatechange=function()
+{
+if(xmlHttp.readyState==4)
+{
+s=xmlHttp.responseText;
+arrs=s.split("#");
+Form1.txtYEAR.value=arrs[0];
+Form1.txtMONTH.value=arrs[1];
+Form1.txtDAY.value=arrs[2];
+}
+};
+try{xmlHttp.open("GET",Urlstr,true);}catch(e){}
+try{xmlHttp.send(null);}catch(e){}
+}
+--------------------------------EditLifeInfoHelper--------------------------------
+case "0":
+						try
+						{
+							string strr="";
+							Modules.CHECK_DATETIME a=new Modules.CHECK_DATETIME();
+							string farsi_birth_date=Request.QueryString["txtBIRTH_DATE"].ToString();
+							DateTime latin_birth_date=a.FARSI_LATINDATE(farsi_birth_date);
+							DateTime current_date=DateTime.Now;
+							string farsi_current_date=a.LATIN_To_FARSIDATE(DateTime.Now);
+							int farsi_birth_year=System.Convert.ToInt32(farsi_birth_date.Substring(0,4));
+							int farsi_current_year=System.Convert.ToInt32(farsi_current_date.Substring(0,4));
+							int kabiseh_count=0;
+							for(int i=farsi_birth_year;i<farsi_current_year;i++)
+							{
+								if(a.KABISEH_F(i.ToString())==true) kabiseh_count=kabiseh_count+1;
+							}
+							TimeSpan diff=current_date-latin_birth_date;
+							int daysum=diff.Days;
+							int d=daysum-kabiseh_count;
+							double year=Math.Floor(d/365.0);
+							double month=Math.Floor((daysum-((kabiseh_count*366)+((year-kabiseh_count)*365)))/30);
+							if(month==12) month=11;
+							DateTime Date1=latin_birth_date.AddYears(System.Convert.ToInt32(year));
+							DateTime Date2=Date1.AddMonths(System.Convert.ToInt32(month));
+							TimeSpan daydiff=current_date-Date2;
+							int day=daydiff.Days;
+							if(day==30 || day==31) day=29;
+							if(day<0) day=0;
+							strr=year+"#"+month+"#"+day+"#";
+							Response.Write(strr);
+							break;
+						}
+						catch(Exception ex)
+						{
+							Response.Write("");
+							break;
+						}
+-------------------------------------------------------------------------------------
