@@ -1,0 +1,37 @@
+function filterSubGrid() {
+  //  var accountsGrid ="BF79405E-C8FE-E311-8293-000C2925A549";// document.getElementById("GListDarkhast"); //grid to filter 
+ var accountsGrid = document.getElementById("GListDarkhast"); //grid to filter 
+alert("accountsGrid:"+accountsGrid);
+if (accountsGrid == null || accountsGrid.readyState != "complete") 
+ {
+  setTimeout('UpdateSubGrid()', 200000000000000000);   
+ }
+accountsGrid = document.getElementById("GListDarkhast"); 
+var codepersoneli= GPL_getFieldValue("meh_codepersoneli");
+alert("codepersoneli:"+codepersoneli);
+var fetchXml ="<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false'>"+
+"  <entity name='meh_darkhastmehnpazir'>"+
+ "    <attribute name='meh_vahedmehmanpazir' />"+
+ "    <attribute name='meh_startdate' />"+
+ "    <attribute name='meh_mhazinemehman' />"+
+  "   <attribute name='meh_mhazinekhanevade' />"+
+   "  <attribute name='meh_name' />"+
+   "  <attribute name='meh_darkhastmehnpazirid' />"+
+"     <order attribute='meh_name' descending='false' />"+
+  "  <attribute name='meh_codepersoneli' />"+
+
+"    <filter type='and'>"+
+  "     <condition attribute='meh_codepersoneli' operator='eq'  value='"+codepersoneli+"' />"+
+ "    </filter>" +
+
+ "    <link-entity name='systemuser' from='systemuserid' to='createdby' visible='false' link-type='outer' alias='a_36e8c25317f1e3119914000c2914be69'>"+
+     "  <attribute name='new_personalcode' />"+
+   "    <attribute name='fullname'/>"+
+   "  </link-entity>"+
+  " </entity>"+
+" </fetch>";
+
+alert(" accountsGrid:"+ accountsGrid);
+accountsGrid.control.SetParameter("fetchXml", fetchXml);
+ accountsGrid.control.refresh();
+}  

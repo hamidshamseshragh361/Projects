@@ -1,0 +1,35 @@
+﻿------------------------------------------------Bundle---------------------------------------------------------------
+SELECT ProductId,inq_fk_insurancebranch,inq_fk_product,Name,ProductNumber,'' as Description,'Draft' as StateCode,(case ProductStructure when 3 then 'Product Bundle'  when 2 then 'Product Family'  when 1 then 'Product' else '' end) as ProductStructure,'5' as QuantityDecimal,'Primary Unit' as DefaultUoMId,inq_parameterno,(case ProductTypeCode when 0 then N'انتخابی' else null end) as ProductTypeCode,'Default Unit' as DefaultUoMScheduleId,CreatedOn,asia_Header,asia_footer,asia_entityname
+FROM   ProductBase
+where  ProductStructure=3
+--and ProductId='24B2F143-F3E7-E411-80D3-005056AF4F2D'
+order by CreatedOn
+------------------------------------------------Product--------------------------------------------------------------
+SELECT ProductId,inq_fk_insurancebranch,inq_fk_product,Name,ProductNumber,'' as Description,'Draft' as StateCode,(case ProductStructure when 3 then 'Product Bundle'  when 2 then 'Product Family'  when 1 then 'Product' else '' end) as ProductStructure,'5' as QuantityDecimal,'Primary Unit' as DefaultUoMId,inq_parameterno,(case ProductTypeCode when 0 then N'انتخابی' else null end) as ProductTypeCode,'Default Unit' as DefaultUoMScheduleId,CreatedOn,asia_Header,asia_footer,asia_entityname
+FROM   ProductBase
+where  ProductStructure<>3
+--and inq_fk_product='24B2F143-F3E7-E411-80D3-005056AF4F2D'
+order by CreatedOn
+------------------------------------------------ProductAssociation------------------------------------------------
+SELECT ProductAssociationId,ProductId,AssociatedProduct,Quantity, 'Primary Unit' as UoMId,
+(case ProductIsRequired when 0 then 'Optional' when 1 then 'Required' else '' end) as ProductIsRequired,
+(case asia_currentdate when 0 then N'خیر' when 1 then N'بلی' else '' end) as asia_currentdate,
+(case inq_disable when 0 then N'خیر' when 1 then N'بلی' else '' end) as inq_disable,
+(case inq_type when 1 then N'عدد' when 2 then N'متن'  when 3 then N'تاریخ'  when 4 then N'انتخابی'  when 5 then N'GUID'  when 6 then N'Upload' else '' end) as inq_type,
+(case asia_dependency when 0 then N'خیر' when 1 then N'بلی' else '' end) as asia_dependency,
+(case asia_dependencyanother when 0 then N'خیر' when 1 then N'بلی' else '' end) as asia_dependencyanother,
+asia_visibleconditions,asia_enableconditions,asia_entityreference,
+inq_validation,asia_ordering,CreatedOn
+FROM ProductAssociationBase
+--where ProductId='24B2F143-F3E7-E411-80D3-005056AF4F2D'
+order by CreatedOn
+------------------------------------------------Formula------------------------------------------------
+SELECT inq_formulaId,inq_fk_insurancebranch,inq_fk_product1,inq_fk_product,inq_name,inq_ordering,inq_desc,inq_code,CreatedOn
+FROM   inq_formulaBase
+--where inq_fk_product1='24B2F143-F3E7-E411-80D3-005056AF4F2D'
+order by CreatedOn
+------------------------------------------------CpmboDetail-----------------------------------------------
+SELECT inq_combodetailId,inq_name,inq_fk_insurancebranch,inq_fk_product1,inq_fk_product,inq_text,inq_value,asia_visibleconditions,inq_validation,CreatedOn
+FROM   inq_combodetailBase
+--where inq_fk_product1='24B2F143-F3E7-E411-80D3-005056AF4F2D'
+order by CreatedOn

@@ -1,0 +1,42 @@
+﻿GPL_getFieldValue(fieldName)	Get field value
+GPL_setFieldValue(fieldName, value)	Set field value
+GPL_getOptionSetText(fieldName)	Get OptionSet text
+GPL_getOptionSetValue(fieldName)	Get OptionSet numeric value
+GPL_setOptionSetValue(fieldName, value)	Set OptionSet numeric value (pass the numeric value not the text value)
+GPL_hideOptionSetItem(fieldName, value)	Hide OptionSet Item (pass the numeric value not the text value)
+GPL_getTwoOptionsValue(fieldName)	Get Two Options value
+GPL_setTwoOptionsValue(fieldName, value)	Set Two Options value
+GPL_getLookupText(fieldName)	Get Lookup item text
+GPL_getLookupGuid(fieldName)	Get Lookup item Guid
+GPL_setLookupValue(fieldName, Guid, name, entityType)	Set Lookup Value  Sample: GPL_setLookupValue("new_customer", "{FD140AAF-4DF4-11DD-BD17}", "ACC1", "account");
+GPL_clearLookupValue(fieldName)	Clear Lookup Value
+GPL_disableField(fieldName, value)	Disable/Enable a Filed(value: true, false)
+GPL_showField(fieldName, value)	Hide/Show a Filed (value: true, false)
+GPL_showTabSection(tabname, sectionname, value)	Hide/Show Tabs and Sections Sample: GPL_showTabSection("tab_name", null, false)
+GPL_showNavigationItem(navitemname, value)	Hide/Show Navigation Items (Use IE Developer Tools to find navitemname) Sample: GPL_showNavigationItem("nav_new_leads", false)
+GPL_setRequirementLevel(fieldName, value)	Set Field Requirement Level (value: "none", "required", "recommended")
+GPL_getCurrentDateTime()	Get current datetime
+GPL_AddDaysToDateTime(iDate, days)	Add some days to a datetime, days can be positive or negative
+GPL_AddMonthsToDateTime(iDate, months)	Add some months to a datetime, months can be positive or negative
+GPL_AddYearsToDateTime(iDate, years)	Add some years to a datetime, years can be positive or negative
+GPL_DateDiffInDays(iDate1, iDate2)	Return date difference in days (days may be positive or negative)
+GPL_Gregorian2Shamsi(iDate)	Convert Gregorian Date to Shamsi Date Sample: GPL_Gregorian2Shamsi("2012/10/25")
+GPL_Shamsi2Gregorian(shYear, shMonth, shDay) 	Convert Shamsi Date to Gregorian Date Sample: GPL_Shamsi2Gregorian(1391, 10, 25)
+GPL_padNumber(n, width)	Pad a number with leading zeros
+GPL_setFocus(fieldName)	Set Focus to a field
+GPL_getFormType()	Get Form Type ("create","update","read-only","disabled","bulk-edit")
+GPL_FormIsDirty()	Is Form Dirty
+GPL_FieldIsDirty(fieldName)	Is Field Dirty
+GPL_stopOnSaveEvent(ExecutionObj)	Stop Save Event select "Pass Execution context as first parameter" in save handler properties  write save handler function as: functin new_control_OnSave(ExecutionObj) { ... }
+GPL_stopSaveAndClose(ExecutionObj) 	Stop "Save and Close" or "Save and New" and perform a normal save select "Pass Execution context as first parameter" in save handler properties write save handler function as: functin new_control_OnSave(ExecutionObj) { ... }
+GPL_getSaveMode(ExecutionObj)	Get Save Event Mode select "Pass Execution context as first parameter" in save handler properties  write save handler function as: functin new_control_OnSave(ExecutionObj) { ... }
+GPL_saveForm()	Save the Form
+GPL_saveAndcloseForm()	Save and Close the Form
+GPL_saveAndnewForm()	Save and New the Form
+GPL_closeForm()	Close the Form
+GPL_closeFormDiscardChanges()	Close the Form and discard changes
+GPL_ConvertTextField2LinkButton(txtField, linkText, functionName)	Convert Text Field to Link Button Sample: GPL_ConvertTextField2LinkButton("new_copytext", "Copy From Right", "CopyTextFunction()");
+GPL_getCurrentRecordGuid()	Get the Guid of the current record
+GPL_callOnChangeEvent(fieldName)	Call the OnChange Event of a field
+GPL_setAllRelatedEntityFilters2All(mainEntity)	Set all related entities filters of account or contact to "all" mainEntity can be "account" or "contact"
+GPL_setRelatedEntityFilter2All(mainEntity, relatedEntity)	Set related entity filter of account or contact to "all" mainEntity can be "account" or "contact" relatedEntity can be "activity", "opportunity", "quote", "order", "invoice" or "case"

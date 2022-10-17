@@ -1,0 +1,12 @@
+﻿ How do I get IIS10 to support WCF services?
+
+1. First add MIME type: extension ". svc", MIME Type "Application/octet-stream":
+
+2. Then add the managed Handler (add managed handler) in "Handler Mappings (Handler mapping)":
+
+Request Path: *.svc
+
+Type:System.ServiceModel.Activation.HttpHandler
+
+name:svc-integrated
+

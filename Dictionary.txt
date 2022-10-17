@@ -1,0 +1,20 @@
+ //کنترل خطاها
+            if (WbsV6PrpsRes != null && WbsV6PrpsRes.Errors != null)
+            {
+                //IList<string> Errors1 = new List<string>();
+                Dictionary<string, string> Errors = new Dictionary<string, string>();               
+                Errors = WbsV6PrpsRes.Errors;
+                foreach (KeyValuePair<string, string> item in Errors)
+                {
+                    if (item.Key == "3")
+                    {
+                        string Err = ".بیمه نامه تکراری است";
+                        return;
+                    }
+                    if (item.Key == "7")
+                    {
+                        string Err = ".کد کارگزار در بیمه مرکزی ثبت نشده است";
+                        return;
+                    }
+                }
+            }

@@ -1,0 +1,1030 @@
+﻿--------------------------------------------------------------------User IsDisabled Set--------------------------------------------------------------------
+SystemUserId = new Guid(ds.Tables["SystemUser"].Rows[i].ItemArray[ds.Tables["SystemUser"].Columns["SystemUserId"].Ordinal].ToString().Trim());
+OrgService OrgService = new OrgService();
+OrganizationServiceProxy orgService = OrgService.GetOrgService();
+                   try
+                   {
+                       Entity entity = new Entity("systemuser");
+                        entity["systemuserid"] = new Guid(SystemUserId.ToString());
+                        //entity["isdisabled"] = Convert.ToBoolean(false); //true;// new OptionSetValue(1);                    
+                        //orgService.Update(entity); 
+                      
+                        orgService.EnableProxyTypes();                          
+                        Entity user = orgService.Retrieve("systemuser", SystemUserId, new ColumnSet(new String[] { "systemuserid", "firstname", "lastname" })).ToEntity<Entity>();                                                      
+                                SetStateRequest request = new SetStateRequest()
+                                {
+                                    EntityMoniker = user.ToEntityReference(),
+
+                                    // Sets isdisabled=true
+                                    //State = new OptionSetValue(1),                                    
+                                    //Status = new OptionSetValue(-1)
+                                    
+                                    //Sets isdisabled=false
+                                    State = new OptionSetValue(0),                                    
+                                    Status = new OptionSetValue(-1)                                        
+                                };
+                    orgService.Execute(request);                                                                                                                                 
+                    }
+                    catch (Exception ex)
+                    {
+                        string a = ex.Message;
+                    }
+--------------------------------------------------------------------UserRoles--------------------------------------------------------------------
+var currentUserId = Xrm.Page.context.getUserId();
+var currentUserRoles = Xrm.Page.context.getUserRoles();
+if(currentUserRoles.toString().toUpperCase().indexOf("59DB9AA1-848B-E411-80C6-005056AF56FB")!=-1)//System Administrator
+{
+alert("");
+}
+
+var userRoleName = GetUserInformations();
+function GetUserInformations() 
+{
+var serverUrl = location.protocol + "//" + location.host + "/" + Xrm.Page.context.getOrgUniqueName();
+var ODataPath = serverUrl + "/XRMServices/2011/OrganizationData.svc"; 
+var userRequest = new XMLHttpRequest(); 
+userRequest.open("GET", ODataPath + "/SystemUserSet(guid'" + Xrm.Page.context.getUserId() + "')", false); 
+userRequest.setRequestHeader("Accept", "application/json"); 
+userRequest.setRequestHeader("Content-Type", "application/json; charset=utf-8"); 
+userRequest.send();
+ if (userRequest.status === 200)
+   {
+        var retrievedUser = JSON.parse(userRequest.responseText).d; 
+        var FullName = retrievedUser.FullName;
+        var Title = retrievedUser.Title;
+        var JobTitle = retrievedUser.PreferredPhoneCode;
+
+        var IsMarrid= retrievedUser.new_IsMarrid;
+        var CodePersoneli = retrievedUser.new_PersonalCode;     
+   }
+return FullName;
+ }
+----------------------------------------------------------------GetRoleName--------------------------------------------------------------------
+var UserRoles = Xrm.Page.context.getUserRoles();
+var UserRolesName;
+for (var i = 0; i < UserRoles.length; i++) 
+{
+  var userRoleId = UserRoles[i];
+  if(userRoleId.toString().toUpperCase().indexOf("59DB9AA1-848B-E411-80C6-005056AF56FB")!=-1)//System Administrator
+  {
+  UserRolesName=GetRoleName(userRoleId);
+  bereak;
+  }
+}
+function GetRoleName(userRoleId) 
+{
+     var selectQuery = "RoleSet?$top=1&$filter=RoleId eq guid'" + userRoleId + "'&$select=Name";
+     var odataSelect = GetServerUrl() + selectQuery;     
+     var roleName = null;
+     $.ajax({
+         type: "GET",
+         async: false,
+         contentType: "application/json; charset=utf-8",
+         datatype: "json",
+         url: odataSelect,
+         beforeSend: function (XMLHttpRequest) { XMLHttpRequest.setRequestHeader("Accept", "application/json"); },
+         success: function (data, textStatus, XmlHttpRequest) 
+             {
+             var result = data.d;
+             if (!!result) {
+                 roleName = result.results[0].Name;
+             }
+         },
+         error: function (XmlHttpRequest, textStatus, errorThrown) 
+         {             
+         }
+     });
+     return roleName;
+ }
+-------------------------------------------------- Current User In RDL Report Fetch XML-----------------------------------------------------
+dbo.fn_FindBusinessGuid()
+dbo.fn_FindUserGuid()
+<link-entity name='teammembership' from='teamid' to='teamid' visible='false' intersect='true'>
+<link-entity name='systemuser' from='systemuserid' to='systemuserid' alias='user'>
+    <attribute name='fullname' />
+    <attribute name='systemuserid'/>
+        <filter type='and'>
+        <condition attribute='systemuserid' operator='eq-userid' />
+        </filter>
+</link-entity>
+</link-entity>
+--------------------------------------------------------------------window.open_ClosePopupRefreshParent--------------------------------------------------------------------
+//Protocol_Domain_Port Must Be Match
+var purl,ppurl,ppurl2,ppurl21;
+purl=window.location.href;
+ppurl=purl.toString().split("/");
+if(ppurl[2].indexOf(":")==-1 )
+{
+ppurl2=ppurl[2]+":8080"
+}
+else
+{
+ppurl21=ppurl[2].split(":");
+ppurl2=ppurl21[0];
+}
+//window.open(''+ppurl[0]+'//'+ppurl2+'/inquirysystem/webui/inquiryformedit.aspx?purl='+purl+'&entityid='+entityid+'&bundleid='+bundleid+'', "_parent", "toolbar=yes, scrollbars=yes, resizable=yes, top=0, left=0, width=1000, height=800");
+window.open(''+ppurl[0]+'//'+ppurl2+'/inquirysystem/webui/inquiryformedit.aspx?purl='+purl+'&entityid='+entityid+'&bundleid='+bundleid+'', "_parent");
+//C# btnReturn_Click()
+try
+      {
+        //Response.Redirect("http://172.16.25.209:8080/CRM2015Development/main.aspx#321375381", false);        
+        if (Request.QueryString["purl"] != null && Request.QueryString["purl"].ToString().Trim() != "")
+        {
+          string[] ppurl = Request.QueryString["purl"].ToString().Split('/');
+          Response.Redirect(""+ppurl[0]+"//" + ppurl[2] + "/" + ppurl[3] + "/main.aspx#321375381", false);  
+        }
+        else
+        {
+          string purl = "http://172.16.25.213/crm2015DVE/main.aspx?etc=10056&extraqs=%3f_gridType%3d10056%26etc%3d10056%26id%3d%257b1160CA50-B5B9-E411-80CB-005056AF4F2D%257d%26rskey%3d%257b5593FCCD-3384-40F0-9BB6-EE31955A2D3B%257d&pagemode=iframe&pagetype=entityrecord&rskey=%7b5593FCCD-3384-40F0-9BB6-EE31955A2D3B%7d";    
+          string[] ppurl = purl.Split('/');
+          Response.Redirect(""+ppurl[0]+"//" + ppurl[2] + "/" + ppurl[3] + "/main.aspx#321375381", false);
+        }                           
+      }
+      catch(Exception)
+      {
+        Response.Redirect("PageNotFound.aspx",false);
+      }
+//alert("abc");
+//var OK=window.confirm('آيا به حذف مطمئن هستيد؟');
+btnReturn.Attributes.Add("onclick", "ClosePopupRefreshParent()");
+function ClosePopupRefreshParent() 
+{
+    try 
+   {
+      window.opener.location.reload();
+      window.close();
+   }
+   catch (e) 
+   {
+      //alert(e);
+   }
+}
+--------------------------------------------------------------------getId--------------------------------------------------------------------
+var p1=document.getElementById("p1").value;
+var p2=document.getElementById("p2").checked;
+var p3=document.getElementById("p3").selected;
+var p4=document.getElementById("p4").innerHTML;
+
+var EntityId=Xrm.Page.data.entity.getId();
+var EntityName=Xrm.Page.data.entity.getEntityName();
+Xrm.Page.data.save();
+Xrm.Page.data.refresh();
+--------------------------------------------------------------------base_Style.css--------------------------------------------------------------------
+.required{font-family:Tahoma;font-size:9pt;background-color:#f8f7c6}
+.optional{font-family:Tahoma;font-size:9pt;background-color:#baddba}
+.readonly{font-family:Tahoma;font-size:9pt;background-color:#dddddd}
+.warning{font-family:Tahoma;font-size:9pt;background-color:Red}
+
+function load()
+{
+try
+{
+var fileref = document.createElement("link"); 
+fileref.setAttribute("rel", "stylesheet"); 
+fileref.setAttribute("type", "text/css"); 
+fileref.setAttribute("href","/WebResources/base_Style");
+document.getElementsByTagName("head")[0].appendChild(fileref);
+
+document.getElementById("inq_name").className = "required";
+document.getElementById("inq_calculate").className="optional";
+document.getElementById("inq_result").className="readonly";
+document.getElementById("inq_waiting").className="warning";
+}
+catch(e)
+{
+}
+}
+--------------------------------------------------------------------Create Button--------------------------------------------------------------------
+//Global Variables
+var isbutton="false";
+
+function load()
+{
+if(isbutton=="false")
+{
+create_button("inq_btncalculate", "محاسبه و ثبت","200px","f1");
+isbutton="true";
+}
+var mode=GPL_getFormType();
+if(mode=="create")
+{
+}
+else
+{
+}
+}
+
+function f1()
+{
+alert("test");
+}
+
+function create_button(fldName, btnLabel, btnWidth, evt) 
+{
+try
+{
+var btn = '<button class="ms-crm-Button" onclick="'+evt+'()"  style="width:'+btnWidth+';font-family:Tahoma;font-size:8pt" ToolTip="'+btnLabel+'"  id="'+fldName+'" onmouseover="Mscrm.ButtonUtils.hoverOn(this);"  onmouseout="Mscrm.ButtonUtils.hoverOff(this);" >'+btnLabel+' </button>';
+var ctrl = null;
+try 
+{
+ctrl = Xrm.Page.ui.controls.get(fldName).get_chromeElement()[0];
+} 
+catch (e) 
+{
+ctrl = Xrm.Page.ui.controls.get(fldName)._control.get_element();
+}
+ctrl.innerHTML+= btn;
+ctrl.children[0].style.display = 'none';
+ctrl.children[1].style.display = 'none';
+ctrl.children[0].attachEvent('onclick',evt);
+}
+catch(e)
+{
+//alert(e);
+}
+}
+--------------------------------------------------------------------Java Script Get Query String--------------------------------------------------------------------
+--------------------------------------------------------------------Method1
+function load()
+{
+var prodId = getParameterByName('prodId');
+}
+
+function getParameterByName(name)
+{
+    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+    results = regex.exec(location.search);
+    return results === null?"":decodeURIComponent(results[1].replace(/\+/g, " "));
+}
+--------------------------------------------------------------------Method2
+function load()
+{
+var me = getUrlVars()["me"];
+}
+
+function getUrlVars()
+{
+    var vars = [], hash;
+    var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+    for(var i = 0; i < hashes.length; i++)
+    {
+        hash = hashes[i].split('=');
+        vars.push(hash[0]);
+        vars[hash[0]] = hash[1];
+    }
+    return vars;
+}
+-------------------------------------------------------------------- Char2Ascii-----------------------------------------------------------------------
+public string Char2Asci(string str) {
+    string Char2Asc = "";
+    for (int i = 0; i < str.Length; i++) {
+        char str1;
+        str1 =System.Convert.ToChar(str.Substring(i, 1));
+        int unicode;        
+        unicode =(int) str1;         
+        Char2Asc = Char2Asc + " " + unicode.ToString();
+    }
+    if (Char2Asc != "")
+        Char2Asc =Char2Asc.Substring(1,Char2Asc.Length- 1);
+    return Char2Asc;
+}
+
+function Char2Asci(str) {
+    var i;
+    var Char2Asc = "";
+    for (i = 0; i < str.length; i++) {
+        var str1;
+        str1 =str.substr(i, 1);
+        var unicode;
+        unicode = str1.charCodeAt(0);
+        Char2Asc = Char2Asc + " " + unicode.toString();
+    }
+    if (Char2Asc != "")
+        Char2Asc =Char2Asc.substr(1,Char2Asc.length- 1);
+    return Char2Asc;
+}
+
+-------------------------------------------------------------------- Ascii2Char-----------------------------------------------------------------------
+  public string Ascii2Char(string str)
+        {
+            if (str == null) return "";
+            string Ascii2Char = "";
+            string[] NewStr=str.Split(' ');
+            for(int i=0;i<NewStr.Length;i++)
+                if(NewStr[i] != "")
+                    Ascii2Char  = Ascii2Char + (char)(System.Convert.ToInt64(NewStr[i]));
+            return Ascii2Char;
+        }
+-------------------------------------------------------------------- FetchXML-----------------------------------------------------------------------
+function filterSubGrid() {//var accountsGrid ="BF79405E-C8FE-E311-8293-000C2925A549";// document.getElementById("GListDarkhast"); //grid to filter 
+ var accountsGrid = document.getElementById("GListDarkhast"); //grid to filter 
+alert("accountsGrid:"+accountsGrid);
+if (accountsGrid == null || accountsGrid.readyState != "complete") 
+ {
+  setTimeout('UpdateSubGrid()', 200000000000000000);   
+ }
+accountsGrid = document.getElementById("GListDarkhast"); 
+var codepersoneli= GPL_getFieldValue("meh_codepersoneli");
+alert("codepersoneli:"+codepersoneli);
+var fetchXml ="<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false'>"+
+"  <entity name='meh_darkhastmehnpazir'>"+
+ "    <attribute name='meh_vahedmehmanpazir' />"+
+ "    <attribute name='meh_startdate' />"+
+ "    <attribute name='meh_mhazinemehman' />"+
+  "   <attribute name='meh_mhazinekhanevade' />"+
+   "  <attribute name='meh_name' />"+
+   "  <attribute name='meh_darkhastmehnpazirid' />"+
+"     <order attribute='meh_name' descending='false' />"+
+  "  <attribute name='meh_codepersoneli' />"+
+
+"    <filter type='and'>"+
+  "     <condition attribute='meh_codepersoneli' operator='eq'  value='"+codepersoneli+"' />"+
+ "    </filter>" +
+
+ "    <link-entity name='systemuser' from='systemuserid' to='createdby' visible='false' link-type='outer' alias='a_36e8c25317f1e3119914000c2914be69'>"+
+     "  <attribute name='new_personalcode' />"+
+   "    <attribute name='fullname'/>"+
+   "  </link-entity>"+
+  " </entity>"+
+" </fetch>";
+
+alert(" accountsGrid:"+ accountsGrid);
+accountsGrid.control.SetParameter("fetchXml", fetchXml);
+ accountsGrid.control.refresh();
+}  
+-------------------------------------------------------------------- Menu-----------------------------------------------------------------------
+Privilege="Create,Read,Write,Delete,Append,AppendTo,Assign,Share,AllowQuickCampaign,UseInternetMarketing,All"
+
+<Area Id="warranty" Icon="/_imgs/settings_24x24.gif" ResourceId="Area_warranty" DescriptionResourceId="warranty_Area_Description" Title="ضمانت نامه ها" ShowGroups="true" >
+  <Group Id="warrantyGroup1" ResourceId="Group_warrantyGroup1" Title="ضمانت نامه" >
+    <SubArea Id="war_warranty" Entity="war_warranty" Title="ثبت ضمانت نامه " >
+       <Privilege Entity="base_showsetting" Privilege="Read" />
+    </SubArea> 
+  </Group>
+
+  <Group Id="warrantyGroup2" ResourceId="Group_warrantyGroup2" Title="وضعیت ضمانت نامه" >
+    <SubArea Id="war_warrantystatus" Entity="war_warrantystatus" Title="ثبت وضعیت های ضمانت نامه" >
+       <Privilege Entity="base_showsetting" Privilege="Read" />
+    </SubArea> 
+  </Group>
+</Area>
+-------------------------------------------------------------------- NationalCode-----------------------------------------------------------------------
+function  ValidationNationalCode(ParamValue)
+{
+var NId=ParamValue;
+var a=NId.substring(9,10);
+var b=(NId.substring(0,1)*10)+(NId.substring(1,2)*9)+(NId.substring(2,3)*8)+(NId.substring(3,4)*7)+(NId.substring(4,5)*6)+
+(NId.substring(5,6)*5)+(NId.substring(6,7)*4)+(NId.substring(7,8)*3)+(NId.substring(8,9)*2);
+var c=b-(Math.floor(b/11)*11);
+if  ((a==0) && (c==0)) 
+{
+ return "true";
+}
+else if   ((a==1) && (c==1))  
+{
+return "true";
+}
+else if   ((a==11-c) && (c>1))
+{
+return "true";
+}
+else
+{
+return "false";
+}
+}
+-------------------------------------------------------------------- OData-----------------------------------------------------------------------
+function FK_Warranty_Change()
+{
+var WarrantyId=GPL_getLookupGuid("war_fk_warranty");
+if(WarrantyId!=null)
+{
+    var retrieveRecordsReq = new XMLHttpRequest();
+    var serverUrl = location.protocol + "//" + location.host + "/" + Xrm.Page.context.getOrgUniqueName();
+    var ODataPath = serverUrl + "/XRMServices/2011/OrganizationData.svc/war_WarrantySet";
+    ODataPath = ODataPath + "?$select=war_WarranyNo";
+    ODataPath = ODataPath + " &$filter=war_WarrantyId  eq  guid'"+WarrantyId+"'"; 
+    ODataPath = ODataPath + " &order by =war_WarranyNo desc ";
+    ODataPath = ODataPath + " &$top=1 ";   
+    retrieveRecordsReq.open("GET", ODataPath, false);
+    retrieveRecordsReq.setRequestHeader("Accept", "application/json");
+    retrieveRecordsReq.setRequestHeader("Content-Type", "application/json; charset=utf-8");
+    retrieveRecordsReq.send(null);
+    records = JSON.parse(retrieveRecordsReq.responseText).d;    
+    var RequestCount = records.results.length;   
+    //for (var i = 0; i < records.results.length; i++) {
+    var  warranyno = records.results[0].war_WarranyNo;   
+    GPL_setFieldValue("war_warrantynohidden",warranyno );
+    //}
+}
+else
+{
+ GPL_setFieldValue("war_warrantynohidden","");
+}
+}
+
+function f1() {
+    var retrieveRecordsReq = new XMLHttpRequest();
+    var serverUrl = location.protocol + "//" + location.host + "/" + Xrm.Page.context.getOrgUniqueName();
+    alert("serverUrl :" + serverUrl);
+    var ODataPath = serverUrl + "/XRMServices/2011/OrganizationData.svc/agentm_CreateIssueCodeSet";
+    ODataPath = ODataPath + "?$select=agentm_issuecode";
+    ODataPath = ODataPath + "&$filter=not startswith( agentm_issuecode ,'" + StartIssueCode + "')";
+    ODataPath = ODataPath + " &order by =agentm_issuecode desc ";
+    ODataPath = ODataPath + " &$top=1 ";
+    alert("ODataPath,:" + ODataPath);
+    retrieveRecordsReq.open("GET", ODataPath, false);
+    retrieveRecordsReq.setRequestHeader("Accept", "application/json");
+    retrieveRecordsReq.setRequestHeader("Content-Type", "application/json; charset=utf-8");
+    retrieveRecordsReq.send(null);
+    records = JSON.parse(retrieveRecordsReq.responseText).d;
+    alert("records :" + records);
+    var RequestCount = records.results.length;
+    alert("RequestCount:" + RequestCount);
+    //for (var i = 0; i < records.results.length; i++) {
+    var NewIssueCode = records.results[0].agentm_IssueCode;    // meh_Kind;
+    alert("NewIssueCode" + NewIssueCode);
+    GPL_setFieldValue("agentm_issuecode", NewIssueCode);
+    //}
+}
+
+function fk_accoun3_change()
+{
+var Id1=GPL_getLookupGuid("war_fk_account3");
+if(Id1!=null)
+{
+    var retrieveRecordsReq = new XMLHttpRequest();
+    var serverUrl = location.protocol + "//" + location.host + "/" + Xrm.Page.context.getOrgUniqueName();
+    var ODataPath = serverUrl + "/XRMServices/2011/OrganizationData.svc/AccountSet";
+    ODataPath = ODataPath + "?$select=base_branchcode,base_FK_Addresses";
+    ODataPath = ODataPath + " &$filter=AccountId  eq  guid'"+Id1+"'";
+    ODataPath = ODataPath + " &order by =base_branchcode desc ";
+    ODataPath = ODataPath + " &$top=1 ";    
+    retrieveRecordsReq.open("GET", ODataPath, false);
+    retrieveRecordsReq.setRequestHeader("Accept", "application/json");
+    retrieveRecordsReq.setRequestHeader("Content-Type", "application/json; charset=utf-8");
+    retrieveRecordsReq.send(null);
+    records = JSON.parse(retrieveRecordsReq.responseText).d;
+     var RequestCount = records.results.length;
+    //for (var i = 0; i < records.results.length; i++) {
+     var  a1= records.results[0].base_branchcode;               
+     GPL_setFieldValue("war_branchcodehidden",a1);
+    var a2=records.results[0].base_FK_Addresses;   
+    GPL_setLookupValue("war_fk_addresshidden", a2.Id, a2.Name, "base_addresses");  
+   //var optionValue = records.results[0].StatusCode.Value;     
+//***************************************************************************************
+if(a2.Id!=null)
+{
+    var retrieveRecordsReq = new XMLHttpRequest();
+    var serverUrl = location.protocol + "//" + location.host + "/" + Xrm.Page.context.getOrgUniqueName();
+    var ODataPath = serverUrl + "/XRMServices/2011/OrganizationData.svc/base_AddressesSet";
+    ODataPath = ODataPath + "?$select=base_FK_Province,base_FK_City,base_Street1,base_Street2,base_Street3,base_Tel";
+    ODataPath = ODataPath + " &$filter=base_AddressesId  eq  guid'"+a2.Id+"'";
+    ODataPath = ODataPath + " &order by =base_FK_Province desc ";
+    ODataPath = ODataPath + " &$top=1 "; 
+    retrieveRecordsReq.open("GET", ODataPath, false);
+    retrieveRecordsReq.setRequestHeader("Accept", "application/json");
+    retrieveRecordsReq.setRequestHeader("Content-Type", "application/json; charset=utf-8");
+    retrieveRecordsReq.send(null);
+    records = JSON.parse(retrieveRecordsReq.responseText).d;
+     var RequestCount = records.results.length;
+      //for (var i = 0; i < records.results.length; i++) {
+     
+    var a1=records.results[0].base_FK_Province;   
+   GPL_setLookupValue("war_fk_provincehidden", a1.Id, a1.Name, "base_province");  
+
+   var a2=records.results[0].base_FK_City;   
+   GPL_setLookupValue("war_fk_cityhidden", a2.Id, a2.Name, "base_city");  
+
+   var  a3= records.results[0].base_Street1;        
+   GPL_setFieldValue("war_street1hidden",a3);
+
+   var  a4= records.results[0].base_Street2;        
+   GPL_setFieldValue("war_street2hidden",a4);
+
+   var  a5= records.results[0].base_Street3;        
+   GPL_setFieldValue("war_stree3hidden",a5);
+
+   var  a6= records.results[0].base_Tel;        
+   GPL_setFieldValue("war_telhidden",a6);
+ //var optionValue = records.results[0].StatusCode.Value; 
+   //}
+}
+//***************************************************************************************
+   //}
+}
+else
+{
+GPL_setFieldValue("war_branchcodehidden","");
+GPL_clearLookupValue("war_fk_addresshidden");
+GPL_clearLookupValue("war_fk_provincehidden")
+GPL_clearLookupValue("war_fk_cityhidden")
+GPL_setFieldValue("war_street1hidden","");
+GPL_setFieldValue("war_street2hidden","");
+GPL_setFieldValue("war_stree3hidden","");
+GPL_setFieldValue("war_telhidden","");
+}
+}
+////////////////////////////////////Begin Fill issuecode/////////////////////////
+var currentUserId = Xrm.Page.context.getUserId();
+var currentUserRoles = Xrm.Page.context.getUserRoles();
+if(currentUserId!=null)
+{
+    var retrieveRecordsReq = new XMLHttpRequest();
+    var serverUrl = location.protocol + "//" + location.host + "/" + Xrm.Page.context.getOrgUniqueName();
+    var ODataPath = serverUrl + "/XRMServices/2011/OrganizationData.svc/SystemUserSet";
+    ODataPath = ODataPath + "?$select=BusinessUnitId";
+    ODataPath = ODataPath + " &$filter=SystemUserId  eq  guid'"+currentUserId+"'";
+    //ODataPath = ODataPath + " &order by =BusinessUnitId desc ";
+    ODataPath = ODataPath + " &$top=1 ";    
+    retrieveRecordsReq.open("GET", ODataPath, false);
+    retrieveRecordsReq.setRequestHeader("Accept", "application/json");
+    retrieveRecordsReq.setRequestHeader("Content-Type", "application/json; charset=utf-8");
+    retrieveRecordsReq.send(null);
+    records = JSON.parse(retrieveRecordsReq.responseText).d;
+     var RequestCount = records.results.length;
+    if(records.results.length!=0)
+    {
+     var  a1= records.results[0].BusinessUnitId;                   
+     }
+//***************************************************************************************
+if(a1.Id!=null)
+{
+    var retrieveRecordsReq = new XMLHttpRequest();
+    var serverUrl = location.protocol + "//" + location.host + "/" + Xrm.Page.context.getOrgUniqueName();
+    var ODataPath = serverUrl + "/XRMServices/2011/OrganizationData.svc/BusinessUnitSet";
+    ODataPath = ODataPath + "?$select=base_IssueCode";
+    ODataPath = ODataPath + " &$filter=BusinessUnitId  eq  guid'"+a1.Id+"'";
+    ODataPath = ODataPath + " &order by =base_IssueCode desc ";
+    ODataPath = ODataPath + " &$top=1 "; 
+    retrieveRecordsReq.open("GET", ODataPath, false);
+    retrieveRecordsReq.setRequestHeader("Accept", "application/json");
+    retrieveRecordsReq.setRequestHeader("Content-Type", "application/json; charset=utf-8");
+    retrieveRecordsReq.send(null);
+    records = JSON.parse(retrieveRecordsReq.responseText).d;
+     var RequestCount = records.results.length;    
+   if(records.results.length!=0)
+    {    
+    var issuecode=records.results[0].base_IssueCode;   
+   GPL_setFieldValue("inq_issuecode", issuecode);
+    }
+ }
+}
+////////////////////////////////////End Fill issuecode/////////////////////////
+-------------------------------------------------------------------- XMLHttpRequest-----------------------------------------------------------------------
+var xmlHttp;
+function GetXmlHttpObject()
+ {
+    var xmlHttp = null;
+    try
+    {
+     xmlHttp = new XMLHttpRequest();
+    }
+    catch (e) 
+    {
+     try
+     {
+      xmlHttp = new ActiveXObject("Msxml2.XMLHTTP");
+      }
+     catch (e) 
+     {
+       xmlHttp = new ActiveXObject("Microsoft.XMLHTTP");
+     }
+    }
+    return xmlHttp;
+}
+
+function load()
+{
+var mode=GPL_getFormType();
+if(mode=="create")
+{
+GPL_disableField("inq_fk_product", true);
+GPL_disableField("inq_fk_insurancebranch", true);
+alert(".لطفا فرم را ذخیره نمائید تا انتخاب باندل زیر رشته فعال گردد");
+}
+else 
+{
+GPL_disableField("inq_fk_product", false);
+GPL_disableField("inq_fk_insurancebranch", false);
+GPL_setRequirementLevel("inq_fk_product", "required")
+GPL_setRequirementLevel("inq_fk_insurancebranch", "required")
+}
+}
+
+function fk_product_change()
+{
+  xmlHttp = GetXmlHttpObject();
+    if (xmlHttp==null) {
+        alert(".این مرورگر آژاکس را پشتیبانی نمی کند");
+        return;
+    }
+var entityid=Xrm.Page.data.entity.getId();
+var bundleid=GPL_getLookupGuid("inq_fk_product");
+if(entityid!=null && bundleid!=null)
+{
+GPL_showField("inq_waiting", true);
+var purl,ppurl,ppurl2,ppurl21;
+purl=window.location.href;
+ppurl=purl.toString().split("/");
+if(ppurl[2].indexOf(":")==-1 )
+{
+ppurl2=ppurl[2]+":8080"
+}
+else
+{
+ppurl21=ppurl[2].split(":");
+ppurl2=ppurl21[0];
+}   
+     var url= ""+ppurl[0]+"//"+ppurl2+"/inquirysystem/webui/inquiryformhelper.aspx";     
+    url=url+"?queryno=1&purl="+purl+"&entityid="+entityid+"&bundleid="+bundleid+"";
+    url=url+"&sid="+Math.random();
+    //alert(url);
+    xmlHttp.onreadystatechange = stateChanged;
+    xmlHttp.open("GET",url,true);
+    xmlHttp.send(null);
+}
+}
+
+function stateChanged() 
+{
+  var s;
+  if (xmlHttp.readyState==4) 
+  {
+     GPL_showField("inq_waiting", false);
+     s= xmlHttp.responseText;
+     alert(s);
+     Xrm.Page.data.save();
+     Xrm.Page.data.refresh();
+  }    
+}
+--------------------------------------------------------------------Truncate Round--------------------------------------------------------------------
+using system.Globalization;
+decimal d = 0;
+Decimal.TryParse("1.2345E-02", System.Globalization.NumberStyles.Float, CultureInfo.InvariantCulture, out d);
+
+//C#  Numbers  Control (int,long,double,decimal)
+long InsNo = 0;
+    if (!long.TryParse(txtInsNo.Text, out InsNo))
+    {
+     lblErrMsg.Text = "فرمت عدد مورد نظر اشتباه است";
+     mpeError.Show();
+     return;
+    }
+
+//C#  Round  
+decimal Number = System.Data.SqlTypes.SqlDecimal.Round(Convert.ToDecimal(txtNumber.Text),3).Value;
+decimal Number = System.Data.SqlTypes.SqlDecimal.Round(Convert.ToDecimal(txtNumber.Text),-3).Value;
+decimal Number = System.Data.SqlTypes.SqlDecimal.Round(Convert.ToDecimal(123456.789),3).Value;
+decimal Number = System.Data.SqlTypes.SqlDecimal.Round(Convert.ToDecimal(123456.789),-3).Value;
+
+//C#  Truncate
+decimal Number = System.Data.SqlTypes.SqlDecimal.Truncate(Convert.ToDecimal(txtNumber.Text),3).Value;
+decimal Number = System.Data.SqlTypes.SqlDecimal.Truncate(Convert.ToDecimal(txtNumber.Text),-3).Value;
+decimal Number = System.Data.SqlTypes.SqlDecimal.Truncate(Convert.ToDecimal(123456.789),3).Value;
+decimal Number = System.Data.SqlTypes.SqlDecimal.Truncate(Convert.ToDecimal(123456.789),-3).Value;
+
+//SQlServer  Round
+select round(Column,3)  From  Table
+select round(Column,-3) From  Table
+select round(123456.789,3) 
+select round(123456.789,-3)
+
+//SQlServer  Truncate  
+Truncate with ,0,0---->     Floor(Number>0)  Ceiling(Number<0)
+select round(Column,3,3) From  Table
+select round(Column,-3,-3) From  Table
+select round(123456.789,3,3)
+select round(123456.789,-3,-3)
+--------------------------------------------------------------------keypress  keydown keyup--------------------------------------------------------------------
+function load()
+{
+$('#inq_name').keydown(function () {
+  inq_name_keydown();
+});
+}
+
+function inq_name_keydown()
+{
+var a=GPL_getFieldValue("inq_name");
+alert(a);
+}
+--------------------------------------------------------------------setTimeout   setInterval--------------------------------------------------------------------
+var myVar=setTimeout(f1,3000);
+function f1()
+{
+alert('Hello');
+}
+clearTimeout(myVar);
+
+var myVar=setInterval(f1,3000);
+function f1()
+{
+alert('Hello');
+}
+clearInterval(myVar)
+---------------------------------------------------------------SeparatNumber---------------------------------------------------------------
+select life.fn_SeparatNumber('123456789123456')
+SELECT Replace(Convert(Varchar,Convert(Money,123456789123456),1), '.00','')
+SELECT Replace(Convert(Varchar,Convert(Money,LifePrem),1), '.00','') from life.policy
+--------------------------------------------------------------------Current DateTime--------------------------------------------------------------------
+function load()
+{
+var mode=GPL_getFormType();
+if(mode=="create")
+{
+var today = new Date();
+var dd = today.getDate();
+var mm = today.getMonth()+1; 
+var yyyy = today.getFullYear();
+if(dd<10) 
+{
+    dd='0'+dd
+} 
+if(mm<10) 
+{
+    mm='0'+mm
+} 
+var UniqueNumber;
+//UniqueNumber=Math.random();
+UniqueNumber= yyyy+mm+dd+today.getHours()+today.getMinutes()+today.getSeconds();
+GPL_setFieldValue("productnumber", UniqueNumber.toString());
+}
+}
+--------------------------------------------------------------------Convert Numbers To Words--------------------------------------------------------------------
+var sVAVs = " و " ;
+var sefr = "صفر" ;
+var farsi_a = [" تریلیون"," میلیارد"," میلیون"," هزار",""];
+var farsi_b = ["","یكصد", "دویست", "سیصد", "چهارصد", "پانصد", "ششصد","هفتصد","هشتصد","نهصد"];
+var farsi_c = [ "ده", "یازده", "دوازده", "سیزده", "چهارده", "پانزده", "شانزده","هفده", "هجده", "نوزده"];
+var farsi_d = [ "","", "بیست", "سی", "چهل", "پنجاه" , "شصت", "هفتاد", "هشتاد","نود"];
+var farsi_e = [ "","یك", "دو", "سه", "چهار", "پنج" , "شش", "هفت", "هشت", "نه"];
+function Adad(num) {
+    if (num == 0) {
+        return sefr;
+    }
+    var Flag;
+    var S;
+    //    var I;
+    var L;
+    var K = new Array(5);
+
+    S = (num + '').trim();
+    L = S.length;
+    if (L > 15) {
+        return "بسیار بزرگ";
+    }
+
+    for (var i = 0; i < (  15 - L); i++) {
+        S = "0" + S;
+    }
+    for (var i = 0; i < 5; i++) {
+        K[i] = 0;
+    }
+    for (var i = 0; i < ((L / 3) + 0.99).toFixed(0); i++) {
+        var xxx = 3 * ((5 - i) - 1);
+        K[5 - i - 1] = Number(S.substring(xxx, xxx + 3));
+    }
+    Flag = false;
+    S = "";
+
+    for (var I = 0; I < 5; I++) {
+        if (K[I] != 0) {
+            switch (I) {
+                case 0:
+                    S = S + Three(K[I]) + farsi_a[0];
+                    Flag = true;
+                    break;
+                case 1:
+                    S = S + (Flag ? sVAVs : "");
+                    S = S + Three(K[I]) + farsi_a[1];
+                    Flag = true;
+                    break;
+                case 2:
+                    S = S + (Flag ? sVAVs : "");
+                    S = S + Three(K[I]) + farsi_a[2];
+                    Flag = true;
+                    break;
+                case 3:
+                    S = S + (Flag ? sVAVs : "");
+                    S = S + Three(K[I]) + farsi_a[3];
+                    Flag = true;
+                    break;
+                case 4:
+                    S = S + (Flag ? sVAVs : "");
+                    S = S + Three(K[I]) + farsi_a[4];
+                    Flag = true;
+            }
+        }//end for
+    }//end if
+    //    alert(S);
+    //    S = (L % 3 == 0 ? S : S.substring(0, S.length - 2));
+    return S;
+}//end function
+
+function Three(num) {
+    var S = "";
+    var L;
+    var h = new Array(3);
+    L = (('' + num).trim()).length;
+    if (num == 0) {
+        return "";
+    }
+
+    if (num == 100) {
+        return farsi_b[1];
+    }
+    if (L == 3) {
+        h[0] = Number((('' + num).trim()).substring(0, 1));
+        h[1] = Number((('' + num).trim()).substring(1, 2));
+        h[2] = Number((('' + num).trim()).substring(2, 3));
+    }
+    if (L == 2) {
+        h[0] = 0;
+        h[1] = Number((('' + num).trim()).substring(0, 1));
+        h[2] = Number((('' + num).trim()).substring(1, 2));
+    }
+    if (L == 1) {
+        h[0] = 0;
+        h[1] = 0;
+        h[2] = Number((('' + num).trim()).substring(0, 1));
+    }
+    S = farsi_b[h[0]];
+    switch (h[1]) {
+        case 1:
+            S = S + sVAVs + farsi_c[h[2]];
+            break;
+        case 2:
+        case 3:
+        case 4:
+        case 5:
+        case 6:
+        case 7:
+        case 8:
+        case 9:
+            S = S + sVAVs + farsi_d[h[1]];
+            break;
+    }
+    if (h[1] != 1) {
+        S = S + sVAVs + farsi_e[h[2]];
+
+    }//end if
+    S = (L < 3 ? S.substring(13, S.length) : S);
+    return S;
+}
+--------------------------------------------------------------------Password--------------------------------------------------------------------
+   public string GetPassword()
+    {
+        StringBuilder builder = new StringBuilder();
+        builder.Append(RandomString(3, true));
+        builder.Append(RandomNumber(100, 999));
+        return builder.ToString();
+    }
+    private int RandomNumber(int min, int max)
+    {
+        Random random = new Random();
+        return random.Next(min, max);
+    }
+    private string RandomString(int size, bool lowerCase)
+    {
+        StringBuilder builder = new StringBuilder();
+        Random random = new Random();
+        char ch;
+        for (int i = 0; i < size; i++)
+        {
+            ch = Convert.ToChar(Convert.ToInt32(Math.Floor(26 * random.NextDouble() + 65)));
+            builder.Append(ch);
+        }
+        if (lowerCase)
+            return builder.ToString().ToLower();
+        return builder.ToString();
+    }
+--------------------------------------------------------------------تبدیل فایل تصویر به رشته در دیتا بیس--------------------------------------------------------
+if ((brows.PostedFile == null) || (brows.PostedFile.ContentLength <= 0))
+      {
+        ErrLabel.Text = "لطفا حداقل یک فایل برای پیوست انتخاب نمایید.";
+        return;
+      }
+      string FileName = System.IO.Path.GetFileName(brows.PostedFile.FileName);
+      int len = brows.PostedFile.ContentLength;
+      byte[] FileContent = new byte[len];
+      brows.PostedFile.InputStream.Read(FileContent, 0, len);
+      string data = Convert.ToBase64String(FileContent);     
+--------------------------------------------------------------------تبدیل رشته از دیتا بیس به فایل تصویر--------------------------------------------------------
+try
+            {
+              string documentbody;
+              byte[] documentbody1;
+              documentbody = DataSet.Tables["AnnotationBase"].Rows[0].ItemArray[DataSet.Tables["AnnotationBase"].Columns["documentbody"].Ordinal].ToString().Trim();
+              documentbody1 = Convert.FromBase64String(documentbody);
+              MemoryStream stream = new MemoryStream();
+              stream.Write(documentbody1, 0, documentbody1.Length);
+              Image1.imageUrl = "data:image/jpg;base64," + documentbody;
+              //File.WriteAllBytes(directoryToWriteTo+FileName+".rar", documentbody1);
+              //FileStream file = new FileStream("e:\\file1" + Extension, FileMode.Create, FileAccess.Write);
+              //stream.WriteTo(file);
+              //file.Close();
+              //stream.Close();
+            }
+            catch (Exception)
+            {
+            }
+--------------------------------------------------------------------نمایش فایل تصویر در گزارش--------------------------------------------------------
+ابتدا در جدول دیتا ست یک فیلد از جنس آرایه ای از بایت ها به طور مجازی ایجاد می کنیم
+سپس بعد از پر کردن دیتا ست فیلد مربوطه را از روی فیلد رشته ای تصویر پر می کنیم
+در آخر فیلد آرایه ای از بایت ها در دیتا ست را در گزارش نمایش می دهیم
+----------------------------------------------------------------چاپ گزارش----------------------------------------------------------------------
+  try
+    {
+     PolicyBll PolicyBll = new PolicyBll();
+     DataSet ReportDS = new ReportDS();
+     PolicyBll.GetRepEndorsment(Request.QueryString["IssueCode"].ToString(), Request.QueryString["InsNo"].ToString(), ref ReportDS);
+     CrystalDecisions.CrystalReports.Engine.ReportDocument CR = new CrystalDecisions.CrystalReports.Engine.ReportDocument();
+     CR.Load(Server.MapPath("../Report/RepEndorsment.rpt"));
+     CR.SetDataSource(ReportDS);
+     CR.Refresh();
+     CR.SetParameterValue("EndorCode", (Request.QueryString["EndorCode"] != null && Request.QueryString["EndorCode"].ToString().Trim() != "" ? Request.QueryString["EndorCode"].ToString().Trim() : " "));
+     CR.SetParameterValue("EndorCode1", (Request.QueryString["EndorCode1"] != null && Request.QueryString["EndorCode1"].ToString().Trim() != "" ? Request.QueryString["EndorCode1"].ToString().Trim() : " "));
+     CR.SetParameterValue("EndorCode2", (Request.QueryString["EndorCode2"] != null && Request.QueryString["EndorCode2"].ToString().Trim() != "" ? Request.QueryString["EndorCode2"].ToString().Trim() : " "));
+     //System.IO.MemoryStream m;     
+     //m = (System.IO.MemoryStream)CR.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
+     System.IO.Stream m;
+     m = (System.IO.Stream)CR.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
+     //m = (System.IO.MemoryStream)CR.ExportToStream(CrystalDecisions.Shared.ExportFormatType.Excel);
+     byte[] b = new byte[m.Length];
+     m.Read(b, 0, Convert.ToInt32(m.Length));
+     CR.Close();
+     Response.ClearContent();
+     Response.Clear();
+     Response.Charset = "";
+     Response.ClearHeaders();
+     Response.ContentType = "Application/pdf";
+     //Response.ContentType = "application/vnd.ms-excel";
+     Response.AddHeader("Content-Disposition", "attachment;filename=Elhaghieh_" + CheckDate.LATIN_To_FARSIDATE(DateTime.Now).Replace("/", "") + "_" + DateTime.Now.ToString("HHmmss") + ".pdf");
+     //Response.AddHeader("Content-Disposition", "attachment;filename=Elhaghieh_" + CheckDate.LATIN_To_FARSIDATE(DateTime.Now).Replace("/", "") + "_" + DateTime.Now.ToString("HHmmss") + ".xls");
+     Response.Buffer = true;
+     //Response.BinaryWrite(m.ToArray());
+     Response.BinaryWrite(b);
+     Response.End();
+    }
+    catch (Exception)
+    {
+     lblErrMsg.Text = Resources.GlobalMessages.PrintFail;
+     mpeError.Show();
+    }
+----------------------------------------------------------------Mapping----------------------------------------------------------------------
+ //Start Mapping
+                                if (vehicleColorCode != "")
+                                {
+                                    try
+                                    {
+                                        SqlConnection objCon = new SqlConnection();
+                                        objCon.ConnectionString = ConfigurationManager.ConnectionStrings["Conn_Cavis"].ConnectionString;
+                                        objCon.Open();
+                                        using (SqlCommand cmd = new SqlCommand())
+                                        {
+                                            cmd.CommandType = CommandType.Text;
+                                            cmd.CommandText = "select top 1 * from cav_vehicle_color where code=" + Convert.ToInt64(vehicleColorCode) + " ";//insert into values     update set from where   delete from where 
+                                            cmd.Connection = objCon;
+                                            cmd.CommandTimeout = 65535;
+                                            SqlDataAdapter da = new SqlDataAdapter(cmd);
+                                            ReportDS ReportDS = new ReportDS();
+                                            da.Fill(ReportDS.Tables["cav_vehicle_color"]);
+                                            if (ReportDS.Tables["cav_vehicle_color"].Rows.Count != 0)
+                                            {
+                                                if (ReportDS.Tables["cav_vehicle_color"].Rows[0].ItemArray[ReportDS.Tables["cav_vehicle_color"].Columns["code1"].Ordinal] != null && ReportDS.Tables["cav_vehicle_color"].Rows[0].ItemArray[ReportDS.Tables["cav_vehicle_color"].Columns["code1"].Ordinal].ToString().Trim() != "")
+                                                    vehicleColorCode = ReportDS.Tables["cav_vehicle_color"].Rows[0].ItemArray[ReportDS.Tables["cav_vehicle_color"].Columns["code1"].Ordinal].ToString();
+                                                else if (ReportDS.Tables["cav_vehicle_color"].Rows[0].ItemArray[ReportDS.Tables["cav_vehicle_color"].Columns["name"].Ordinal] != null && ReportDS.Tables["cav_vehicle_color"].Rows[0].ItemArray[ReportDS.Tables["cav_vehicle_color"].Columns["name"].Ordinal].ToString().Trim() != "")
+                                                    vehicleColorCode = ReportDS.Tables["cav_vehicle_color"].Rows[0].ItemArray[ReportDS.Tables["cav_vehicle_color"].Columns["name"].Ordinal].ToString();
+                                                else
+                                                    vehicleColorCode = "";
+                                            }
+                                            // cmd.ExecuteNonQuery();
+                                        }
+                                        try
+                                        {
+                                            objCon.Close();
+                                        }
+                                        catch (Exception)
+                                        {
+                                        }
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                    }                                  
+                                }
+                                //End Mapping
+-------------------------------------------------------------------Json To Object Array Converter--------------------------------------------------------------------
+   using System.Web.Script.Serialization;
+
+   public class Person
+    {
+        public int Age { get; set; }
+        public string Name { get; set; }
+    }
+   string json = "[{Name:'John Simith',Age:35},{Name:'Pablo Perez',Age:34}]";
+   JavaScriptSerializer js = new JavaScriptSerializer();
+   Person[] persons = js.Deserialize<Person[]>(json);
+-------------------------------------------------------------------END-----------------------------------------------------------------------------------------------------
+

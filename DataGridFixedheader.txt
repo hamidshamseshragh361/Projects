@@ -1,0 +1,15 @@
+<DIV style="OVERFLOW: auto; HEIGHT: 
+120px">
+<asp:DataGrid ...
+</DIV>
+
+<style type="text/css">
+<!--
+.DataGridFixedHeader {background-color: white; position:relative; top:expression(this.offsetParent.scrollTop);}
+-->
+</style>
+
+<asp:DataGrid id="dgContacts" runat="server" ... >
+
+<HeaderStyle CssClass="ms-formlabel DataGridFixedHeader"></HeaderStyle>
+

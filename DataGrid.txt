@@ -1,0 +1,368 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using System.ServiceModel;
+using System.Data.SqlClient;
+using Microsoft.Xrm.Sdk.Client;
+using Microsoft.Xrm.Sdk;
+using Microsoft.Xrm.Sdk.Query;
+using System.Linq.Expressions;
+using System.Data;
+using System.Configuration;
+using System.Linq;
+using System.Web;
+using System.Text;
+using SabteAhvalLibrary;
+using CMS.GlobalHelper;
+using CMS.SiteProvider;
+using CMS.FormControls;
+using CMS.UIControls;
+using CMS.CMSHelper;
+using CMS.DataEngine;
+using CMS.ExtendedControls;
+using CMS.CMSHelper;
+using CMS.SettingsProvider;
+using CMS.PortalControls;
+using System.Globalization;
+using System.Reflection;
+using System.Globalization;
+using WebReference;
+public partial class CMSWebParts_UserControls_AlertAndComplaints_AlertAndComplaints : System.Web.UI.UserControl
+{
+    #region Fields
+    private static string _msgText = string.Empty;
+    private static string _msgClass = string.Empty;
+    private static bool _riseGlobalMsg = false;
+    #endregion
+
+    #region properties
+    public static string MsgText
+    {
+        get { return _msgText; }
+        set { _msgText = value; }
+    }
+
+    public static string MsgClass
+    {
+        get { return _msgClass; }
+        set { _msgClass = value; }
+    }
+
+    public static bool RiseGlobalMsg
+    {
+        get { return _riseGlobalMsg; }
+        set { _riseGlobalMsg = value; }
+    }
+    #endregion
+
+    protected void Page_PreRender(object sender, EventArgs e)
+    {
+        if (RiseGlobalMsg)
+        {
+            RiseGlobalMsg = false;
+            lblError.Text = MsgText;
+            lblError.CssClass = MsgClass;
+            MsgText = string.Empty;
+            MsgClass = string.Empty;
+            mpeError.Show();
+        }
+    }
+    protected void Page_Load(object sender, EventArgs e)
+    {
+        if (!this.IsPostBack)
+        {
+            FillAlertAndComplaints();
+        }
+    }
+    public void FillAlertAndComplaints()
+    {
+        int startRecord = grdAlertAndComplaints.CurrentPageIndex * grdAlertAndComplaints.PageSize;
+        int endrecord = ((grdAlertAndComplaints.CurrentPageIndex + 1) * grdAlertAndComplaints.PageSize) + 1;
+        int totalRecord = 0;
+        string Error = "";
+        CrmWebService CrmWebService = new CrmWebService();
+        DataSet DataSet = new DataSet();
+        string UserName = CMSContext.CurrentUser.UserName.ToString();
+        string FullName = CMSContext.CurrentUser.FullName.ToString();
+        string UserNamelower = UserName.ToLower();
+        string NationalCode = "";
+        if (UserNamelower.IndexOf("agent") == -1 && UserNamelower.IndexOf("bimehasia") == -1)//مشتری      
+        {
+            CustomTableItemProvider provider = new CustomTableItemProvider(CMSContext.CurrentUser);
+            var ds = provider.GetItems("cms.user", "UserName='" + UserName + "'", "UserName", 1);
+            if (!DataHelper.DataSourceIsEmpty(ds))
+            {
+                try
+                {
+                    NationalCode = ds.Tables[0].Rows[0].ItemArray[ds.Tables[0].Columns["asia_nationalcode"].Ordinal].ToString();
+                }
+                catch (Exception)
+                {
+                    NationalCode = "";
+                }
+            }
+            else
+                NationalCode = "";
+
+            if (NationalCode == "")
+            {
+                lblError.Text = "شماره ملی مشتری ثبت نگردیده است.";
+                mpeError.Show();
+                return;
+            }
+        }
+        //CrmWebService.Timeout = 999999999;
+        CMS.Custom.Helper.ExternalRequest.On();
+        DataSet = CrmWebService.GetAlertAndComplaintsSearch(UserName, NationalCode, startRecord, endrecord, ref totalRecord, ref Error);      
+        //DataSet = CrmWebService.GetAlertAndComplaintsSearch("BIMEHASIA-h.eshragh", "", 0, 11, ref totalRecord, ref Error);
+        CMS.Custom.Helper.ExternalRequest.Off();
+        grdAlertAndComplaints.VirtualItemCount = totalRecord;
+        grdAlertAndComplaints.DataSource = DataSet;
+        try
+        {
+            grdAlertAndComplaints.DataBind();
+        }
+        catch (Exception)
+        {
+            grdAlertAndComplaints.CurrentPageIndex = 0;
+            grdAlertAndComplaints.DataBind();
+        }
+        if (Error.Trim()!="")
+        {
+            lblError.Text = Error;
+            mpeError.Show();
+            return;
+        }
+    }
+    protected void grdAlertAndComplaints_ItemCreated(object sender, DataGridItemEventArgs e)
+    {
+        /*
+      if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
+      {
+        LinkButton deleteButton = e.Item.FindControl("lnkDelete") as LinkButton;
+        if (deleteButton != null)
+          deleteButton.Attributes.Add("onclick",
+              "return window.confirm('آيا به حذف مطمئن هستيد؟')");
+      }
+      */
+    }
+    protected void grdAlertAndComplaints_ItemCommand(object source, DataGridCommandEventArgs e)
+    {
+        /*
+    if (e.CommandName == "LoanInstallment")
+    {
+     Label lblId = (Label)e.Item.FindControl("lblId");
+     string Id = lblId.Text;
+     Session["InstallmentSelectedLoanNo"] = Id;
+     grdgrdinquiryformedit.CurrentPageIndex = 0;
+     Fillgrdinquiryformedit(Id);
+    }
+     */
+    }    
+    protected void grdAlertAndComplaints_ItemDataBound(object sender, DataGridItemEventArgs e)
+    {
+        /*
+        if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
+        {
+            System.Web.UI.WebControls.Label lblRow = (System.Web.UI.WebControls.Label)e.Item.FindControl("lblRow");
+        }
+         */
+    }
+    protected void grdAlertAndComplaints_PageIndexChanged(object source, DataGridPageChangedEventArgs e)
+    {
+        grdAlertAndComplaints.CurrentPageIndex = e.NewPageIndex;
+        FillAlertAndComplaints();   
+    }
+
+    /*
+    protected void btnSearch_Click(object sender, EventArgs e)
+    {
+        //grdAlertAndComplaints.CurrentPageIndex = 0;
+        FillAlertAndComplaints();
+    }
+    */
+}
+
+     /////////////////////////////////////////////AlertandcomplaintMethods///////////////////////////////////////////// 
+    [WebMethod]
+    public DataSet GetAlertAndComplaintsSearch(string UserName,string NationalCode, int StartRecord, int EndRecord, ref int TotalRecord, ref string Error)
+    {
+        try
+        {
+            Error = "";
+            bool Personel = false, Agent = false, Customer = false;
+            Guid AccountId = Guid.Empty;
+            Guid ContactId = Guid.Empty;
+            Guid SystemUserId = Guid.Empty;
+            string AgentCode = "";
+            string UserNamelower = UserName.ToLower();
+            if (UserNamelower.IndexOf("agent") != -1) Agent = true;
+            else if (UserNamelower.IndexOf("bimehasia") != -1) Personel = true;
+            else if (NationalCode.Trim() != "") Customer = true;
+            else Customer = true;
+
+            if (Agent == true)
+            {
+                AgentCode = UserNamelower.Substring(UserNamelower.IndexOf("agent") + 5, 4);
+                AccountDS ds = new AccountDS();
+                for (int i = 0; i <= ds.Tables.Count - 1; i++)
+                {
+                  for (int j = 0; j <= ds.Tables[i].Columns.Count - 1; j++)
+                  {
+                    ds.Tables[i].Columns[j].AllowDBNull = true;
+                    ds.Tables[i].Constraints.Clear();
+                  }
+                }              
+                try
+                {
+                    using (SqlConnection myConnection = new SqlConnection(ConnCRM))
+                    {
+                        string cmdText = "SELECT Top 1 * from AccountBase where base_AgentCode='" + AgentCode + "' And StateCode=0 And new_Agent=1 ";
+                        SqlCommand myCommand = new SqlCommand(cmdText, myConnection);
+                        myCommand.CommandType = CommandType.Text;
+                        myConnection.Open();
+                        SqlDataAdapter sqlDataAdapter = new SqlDataAdapter();
+                        sqlDataAdapter.SelectCommand = myCommand;
+                        //sqlDataAdapter.TableMappings.Add("Table", "ProductSubstituteBase");
+                        sqlDataAdapter.TableMappings.Add("Table", "AccountBase");
+                        sqlDataAdapter.Fill(ds);
+                        myConnection.Close();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Error = "CRM خطا در اتصال به بانک اطلاعاتي" + " " + ex.Message;
+                    return null;
+                }
+                if (ds.Tables["AccountBase"].Rows.Count == 0)
+                {
+                    Error = "اطلاعاتی در خصوص این نمایندگی در CRM ثبت نگردیده است .";
+                    return null;
+                }
+                AccountId = new Guid(ds.AccountBase.Rows[0].ItemArray[ds.AccountBase.Columns["AccountId"].Ordinal].ToString());
+            }
+            else if (Personel == true)
+            {
+                string DomainName = UserName.Replace("BIMEHASIA-", "BIMEHASIA\\");
+                WebServiceSystemUserDS ds = new WebServiceSystemUserDS();
+                for (int i = 0; i <= ds.Tables.Count - 1; i++)
+                {
+                  for (int j = 0; j <= ds.Tables[i].Columns.Count - 1; j++)
+                  {
+                    ds.Tables[i].Columns[j].AllowDBNull = true;
+                    ds.Tables[i].Constraints.Clear();
+                  }
+                }            
+                try
+                {
+                    using (SqlConnection myConnection = new SqlConnection(ConnCRM))
+                    {
+                        string cmdText = "SELECT top 1 * from SystemUserBase where DomainName like N'%" + DomainName + "%'";
+                        SqlCommand myCommand = new SqlCommand(cmdText, myConnection);
+                        myCommand.CommandType = CommandType.Text;
+                        myConnection.Open();
+                        SqlDataAdapter sqlDataAdapter = new SqlDataAdapter();
+                        sqlDataAdapter.SelectCommand = myCommand;
+                        //sqlDataAdapter.TableMappings.Add("Table", "ProductSubstituteBase");
+                        sqlDataAdapter.TableMappings.Add("Table", "SystemUserBase");
+                        sqlDataAdapter.Fill(ds);
+                        myConnection.Close();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Error = "CRM خطا در اتصال به بانک اطلاعاتي" + " " + ex.Message;
+                    return null;
+                }
+                if (ds.Tables["SystemUserBase"].Rows.Count == 0)
+                {
+                    Error = "نام کاربری معتبر نمی باشد یا موجود نیست.";
+                    return null;
+                }
+                SystemUserId = new Guid(ds.SystemUserBase.Rows[0].ItemArray[ds.SystemUserBase.Columns["SystemUserId"].Ordinal].ToString());
+            }
+            else if (Customer == true)
+            {
+                ContactDS ds = new ContactDS();
+                for (int i = 0; i <= ds.Tables.Count - 1; i++)
+                {
+                  for (int j = 0; j <= ds.Tables[i].Columns.Count - 1; j++)
+                  {
+                    ds.Tables[i].Columns[j].AllowDBNull = true;
+                    ds.Tables[i].Constraints.Clear();
+                  }
+                }               
+                try
+                {
+                    using (SqlConnection myConnection = new SqlConnection(ConnCRM))
+                    {
+                        string cmdText = "SELECT Top 1 * from ContactBase where base_NationalCode='" + NationalCode + "' And StateCode=0 ";
+                        SqlCommand myCommand = new SqlCommand(cmdText, myConnection);
+                        myCommand.CommandType = CommandType.Text;
+                        myConnection.Open();
+                        SqlDataAdapter sqlDataAdapter = new SqlDataAdapter();
+                        sqlDataAdapter.SelectCommand = myCommand;
+                        //sqlDataAdapter.TableMappings.Add("Table", "ProductSubstituteBase");
+                        sqlDataAdapter.TableMappings.Add("Table", "ContactBase");
+                        sqlDataAdapter.Fill(ds);
+                        myConnection.Close();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Error = "CRM خطا در اتصال به بانک اطلاعاتي" + " " + ex.Message;
+                    return null;
+                }
+                if (ds.Tables["ContactBase"].Rows.Count == 0)
+                {
+                    Error = "اطلاعاتی در خصوص این مشتری در CRM ثبت نگردیده است .";
+                    return null;
+                }
+                ContactId = new Guid(ds.ContactBase.Rows[0].ItemArray[ds.ContactBase.Columns["ContactId"].Ordinal].ToString());
+            }
+            AlertAndComplaintsStatusDS ds1 = new AlertAndComplaintsStatusDS();
+            for (int i = 0; i <= ds1.Tables.Count - 1; i++)
+            {
+              for (int j = 0; j <= ds1.Tables[i].Columns.Count - 1; j++)
+              {
+                ds1.Tables[i].Columns[j].AllowDBNull = true;
+                ds1.Tables[i].Constraints.Clear();
+              }
+            }           
+            try
+            {
+                using (SqlConnection myConnection = new SqlConnection(ConnCRM))
+                {
+                    string cmdText="";
+                    if (Agent == true)
+                      cmdText = "WITH CTE AS(select (case asia_theresultsof when 1 then N'شکایت شما در سیستم ثبت گردیده  و مورد بررسی قرار می گیرد' when 2 then N'شکایت شما در دست بررسی می باشد' when 3 then N'جهت اخذ پاسخ شکایت به ایمیل خود مراجعه فرمایید' else '' end) as asia_theresultsofDesc,asia_description,(case asia_status when 1 then N'جدید' when 2 then N'در جریان' when 3 then N'مختومه' else '' end) as asia_statusDesc ,dbo.sgfn_DateToShamsiDate(CONVERT(datetime,SWITCHOFFSET(CONVERT(datetimeoffset,asia_dateofreferencetoexpert),DATENAME(TzOffset, SYSDATETIMEOFFSET())))) as asia_dateofreferencetoexpertDesc,(select asia_subjectofcomplaints from asia_alertandcomplaintsBase where asia_alertandcomplaintsId=asia_statusBase.asia_trakingcode) as  asia_subjectofcomplaints,(select name from BusinessUnitBase where BusinessUnitId in (select asia_unitscomplainedabout from asia_alertandcomplaintsBase where asia_alertandcomplaintsId=asia_statusBase.asia_trakingcode)) as  asia_unitscomplainedabout,(select asia_damagefilenumber from asia_alertandcomplaintsBase where asia_alertandcomplaintsId=asia_statusBase.asia_trakingcode) as  asia_damagefilenumber,(select dbo.sgfn_DateToShamsiDate(CONVERT(datetime,SWITCHOFFSET(CONVERT(datetimeoffset,asia_dateofcomplaint),DATENAME(TzOffset, SYSDATETIMEOFFSET())))) from asia_alertandcomplaintsBase where asia_alertandcomplaintsId=asia_statusBase.asia_trakingcode) as  asia_dateofcomplaint,(select asia_accountid1 from asia_alertandcomplaintsBase where asia_alertandcomplaintsId=asia_statusBase.asia_trakingcode) as  asia_accountid1,(select asia_contactid1 from asia_alertandcomplaintsBase where asia_alertandcomplaintsId=asia_statusBase.asia_trakingcode) as  asia_contactid1,(select asia_userid1 from asia_alertandcomplaintsBase where asia_alertandcomplaintsId=asia_statusBase.asia_trakingcode) as  asia_userid1,ROW_NUMBER() OVER (ORDER BY asia_statusdate desc ) AS RecordNumber,count(1) over() as TotalRecord from asia_statusBase)select * from CTE Where RecordNumber > " + StartRecord + "  AND RecordNumber < " + EndRecord + " and asia_accountid1='"+AccountId+"'";
+                    else if (Personel==true)
+                      cmdText = "WITH CTE AS(select (case asia_theresultsof when 1 then N'شکایت شما در سیستم ثبت گردیده  و مورد بررسی قرار می گیرد' when 2 then N'شکایت شما در دست بررسی می باشد' when 3 then N'جهت اخذ پاسخ شکایت به ایمیل خود مراجعه فرمایید' else '' end) as asia_theresultsofDesc,asia_description,(case asia_status when 1 then N'جدید' when 2 then N'در جریان' when 3 then N'مختومه' else '' end) as asia_statusDesc ,dbo.sgfn_DateToShamsiDate(CONVERT(datetime,SWITCHOFFSET(CONVERT(datetimeoffset,asia_dateofreferencetoexpert),DATENAME(TzOffset, SYSDATETIMEOFFSET())))) as asia_dateofreferencetoexpertDesc,(select asia_subjectofcomplaints from asia_alertandcomplaintsBase where asia_alertandcomplaintsId=asia_statusBase.asia_trakingcode) as  asia_subjectofcomplaints,(select name from BusinessUnitBase where BusinessUnitId in (select asia_unitscomplainedabout from asia_alertandcomplaintsBase where asia_alertandcomplaintsId=asia_statusBase.asia_trakingcode)) as  asia_unitscomplainedabout,(select asia_damagefilenumber from asia_alertandcomplaintsBase where asia_alertandcomplaintsId=asia_statusBase.asia_trakingcode) as  asia_damagefilenumber,(select dbo.sgfn_DateToShamsiDate(CONVERT(datetime,SWITCHOFFSET(CONVERT(datetimeoffset,asia_dateofcomplaint),DATENAME(TzOffset, SYSDATETIMEOFFSET())))) from asia_alertandcomplaintsBase where asia_alertandcomplaintsId=asia_statusBase.asia_trakingcode) as  asia_dateofcomplaint,(select asia_accountid1 from asia_alertandcomplaintsBase where asia_alertandcomplaintsId=asia_statusBase.asia_trakingcode) as  asia_accountid1,(select asia_contactid1 from asia_alertandcomplaintsBase where asia_alertandcomplaintsId=asia_statusBase.asia_trakingcode) as  asia_contactid1,(select asia_userid1 from asia_alertandcomplaintsBase where asia_alertandcomplaintsId=asia_statusBase.asia_trakingcode) as  asia_userid1,ROW_NUMBER() OVER (ORDER BY asia_statusdate desc ) AS RecordNumber,count(1) over() as TotalRecord from asia_statusBase)select * from CTE Where RecordNumber > " + StartRecord + "  AND RecordNumber < " + EndRecord + " and asia_userid1='" + SystemUserId + "'";
+                    else if (Customer==true)
+                      cmdText = "WITH CTE AS(select (case asia_theresultsof when 1 then N'شکایت شما در سیستم ثبت گردیده  و مورد بررسی قرار می گیرد' when 2 then N'شکایت شما در دست بررسی می باشد' when 3 then N'جهت اخذ پاسخ شکایت به ایمیل خود مراجعه فرمایید' else '' end) as asia_theresultsofDesc,asia_description,(case asia_status when 1 then N'جدید' when 2 then N'در جریان' when 3 then N'مختومه' else '' end) as asia_statusDesc ,dbo.sgfn_DateToShamsiDate(CONVERT(datetime,SWITCHOFFSET(CONVERT(datetimeoffset,asia_dateofreferencetoexpert),DATENAME(TzOffset, SYSDATETIMEOFFSET())))) as asia_dateofreferencetoexpertDesc,(select asia_subjectofcomplaints from asia_alertandcomplaintsBase where asia_alertandcomplaintsId=asia_statusBase.asia_trakingcode) as  asia_subjectofcomplaints,(select name from BusinessUnitBase where BusinessUnitId in (select asia_unitscomplainedabout from asia_alertandcomplaintsBase where asia_alertandcomplaintsId=asia_statusBase.asia_trakingcode)) as  asia_unitscomplainedabout,(select asia_damagefilenumber from asia_alertandcomplaintsBase where asia_alertandcomplaintsId=asia_statusBase.asia_trakingcode) as  asia_damagefilenumber,(select dbo.sgfn_DateToShamsiDate(CONVERT(datetime,SWITCHOFFSET(CONVERT(datetimeoffset,asia_dateofcomplaint),DATENAME(TzOffset, SYSDATETIMEOFFSET())))) from asia_alertandcomplaintsBase where asia_alertandcomplaintsId=asia_statusBase.asia_trakingcode) as  asia_dateofcomplaint,(select asia_accountid1 from asia_alertandcomplaintsBase where asia_alertandcomplaintsId=asia_statusBase.asia_trakingcode) as  asia_accountid1,(select asia_contactid1 from asia_alertandcomplaintsBase where asia_alertandcomplaintsId=asia_statusBase.asia_trakingcode) as  asia_contactid1,(select asia_userid1 from asia_alertandcomplaintsBase where asia_alertandcomplaintsId=asia_statusBase.asia_trakingcode) as  asia_userid1,ROW_NUMBER() OVER (ORDER BY asia_statusdate desc ) AS RecordNumber,count(1) over() as TotalRecord from asia_statusBase)select * from CTE Where RecordNumber > " + StartRecord + "  AND RecordNumber < " + EndRecord + " and asia_contactid1='" + ContactId + "'";
+                    SqlCommand myCommand = new SqlCommand(cmdText, myConnection);
+                    myCommand.CommandType = CommandType.Text;
+                    myConnection.Open();
+                    SqlDataAdapter sqlDataAdapter = new SqlDataAdapter();
+                    sqlDataAdapter.SelectCommand = myCommand;
+                    //sqlDataAdapter.TableMappings.Add("Table", "ProductSubstituteBase");
+                    sqlDataAdapter.TableMappings.Add("Table", "asia_statusBase");
+                    sqlDataAdapter.Fill(ds1);
+                    if (ds1.Tables["asia_statusBase"].Rows.Count > 0) TotalRecord = Convert.ToInt32(ds1.Tables["asia_statusBase"].Rows[0].ItemArray[ds1.Tables["asia_statusBase"].Columns["TotalRecord"].Ordinal].ToString());
+                    myConnection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                Error = "CRM خطا در اتصال به بانک اطلاعاتي" + " " + ex.Message;
+                return null;
+            }
+            return ds1;
+        }
+        catch (Exception ex)
+        {
+            Error = "خطا در برنامه" + " " + ex.Message;
+            return null;
+        }
+    }

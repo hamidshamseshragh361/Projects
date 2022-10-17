@@ -1,0 +1,177 @@
+function FK_Warranty_Change()
+{
+var WarrantyId=GPL_getLookupGuid("war_fk_warranty");
+if(WarrantyId!=null)
+{
+    var retrieveRecordsReq = new XMLHttpRequest();
+    var serverUrl = location.protocol + "//" + location.host + "/" + Xrm.Page.context.getOrgUniqueName();
+    var ODataPath = serverUrl + "/XRMServices/2011/OrganizationData.svc/war_WarrantySet";
+    ODataPath = ODataPath + "?$select=war_WarranyNo";
+    ODataPath = ODataPath + " &$filter=war_WarrantyId  eq  guid'"+WarrantyId+"'"; 
+    ODataPath = ODataPath + " &order by =war_WarranyNo desc ";
+    ODataPath = ODataPath + " &$top=1 ";   
+    retrieveRecordsReq.open("GET", ODataPath, false);
+    retrieveRecordsReq.setRequestHeader("Accept", "application/json");
+    retrieveRecordsReq.setRequestHeader("Content-Type", "application/json; charset=utf-8");
+    retrieveRecordsReq.send(null);
+    records = JSON.parse(retrieveRecordsReq.responseText).d;    
+    var RequestCount = records.results.length;   
+    //for (var i = 0; i < records.results.length; i++) {
+    var  warranyno = records.results[0].war_WarranyNo;   
+    GPL_setFieldValue("war_warrantynohidden",warranyno );
+    //}
+}
+else
+{
+ GPL_setFieldValue("war_warrantynohidden","");
+}
+}
+
+function f1() {
+    var retrieveRecordsReq = new XMLHttpRequest();
+    var serverUrl = location.protocol + "//" + location.host + "/" + Xrm.Page.context.getOrgUniqueName();
+    alert("serverUrl :" + serverUrl);
+    var ODataPath = serverUrl + "/XRMServices/2011/OrganizationData.svc/agentm_CreateIssueCodeSet";
+    ODataPath = ODataPath + "?$select=agentm_issuecode";
+    ODataPath = ODataPath + "&$filter=not startswith( agentm_issuecode ,'" + StartIssueCode + "')";
+    ODataPath = ODataPath + " &order by =agentm_issuecode desc ";
+    ODataPath = ODataPath + " &$top=1 ";
+    alert("ODataPath,:" + ODataPath);
+    retrieveRecordsReq.open("GET", ODataPath, false);
+    retrieveRecordsReq.setRequestHeader("Accept", "application/json");
+    retrieveRecordsReq.setRequestHeader("Content-Type", "application/json; charset=utf-8");
+    retrieveRecordsReq.send(null);
+    records = JSON.parse(retrieveRecordsReq.responseText).d;
+    alert("records :" + records);
+    var RequestCount = records.results.length;
+    alert("RequestCount:" + RequestCount);
+    //for (var i = 0; i < records.results.length; i++) {
+    var NewIssueCode = records.results[0].agentm_IssueCode;    // meh_Kind;
+    alert("NewIssueCode" + NewIssueCode);
+    GPL_setFieldValue("agentm_issuecode", NewIssueCode);
+    //}
+}
+
+function fk_accoun3_change()
+{
+var Id1=GPL_getLookupGuid("war_fk_account3");
+if(Id1!=null)
+{
+    var retrieveRecordsReq = new XMLHttpRequest();
+    var serverUrl = location.protocol + "//" + location.host + "/" + Xrm.Page.context.getOrgUniqueName();
+    var ODataPath = serverUrl + "/XRMServices/2011/OrganizationData.svc/AccountSet";
+    ODataPath = ODataPath + "?$select=base_branchcode,base_FK_Addresses";
+    ODataPath = ODataPath + " &$filter=AccountId  eq  guid'"+Id1+"'";
+    ODataPath = ODataPath + " &order by =base_branchcode desc ";
+    ODataPath = ODataPath + " &$top=1 ";    
+    retrieveRecordsReq.open("GET", ODataPath, false);
+    retrieveRecordsReq.setRequestHeader("Accept", "application/json");
+    retrieveRecordsReq.setRequestHeader("Content-Type", "application/json; charset=utf-8");
+    retrieveRecordsReq.send(null);
+    records = JSON.parse(retrieveRecordsReq.responseText).d;
+     var RequestCount = records.results.length;
+    //for (var i = 0; i < records.results.length; i++) {
+     var  a1= records.results[0].base_branchcode;               
+     GPL_setFieldValue("war_branchcodehidden",a1);
+    var a2=records.results[0].base_FK_Addresses;   
+    GPL_setLookupValue("war_fk_addresshidden", a2.Id, a2.Name, "base_addresses");  
+   //var optionValue = records.results[0].StatusCode.Value;     
+//***************************************************************************************
+if(a2.Id!=null)
+{
+    var retrieveRecordsReq = new XMLHttpRequest();
+    var serverUrl = location.protocol + "//" + location.host + "/" + Xrm.Page.context.getOrgUniqueName();
+    var ODataPath = serverUrl + "/XRMServices/2011/OrganizationData.svc/base_AddressesSet";
+    ODataPath = ODataPath + "?$select=base_FK_Province,base_FK_City,base_Street1,base_Street2,base_Street3,base_Tel";
+    ODataPath = ODataPath + " &$filter=base_AddressesId  eq  guid'"+a2.Id+"'";
+    ODataPath = ODataPath + " &order by =base_FK_Province desc ";
+    ODataPath = ODataPath + " &$top=1 "; 
+    retrieveRecordsReq.open("GET", ODataPath, false);
+    retrieveRecordsReq.setRequestHeader("Accept", "application/json");
+    retrieveRecordsReq.setRequestHeader("Content-Type", "application/json; charset=utf-8");
+    retrieveRecordsReq.send(null);
+    records = JSON.parse(retrieveRecordsReq.responseText).d;
+     var RequestCount = records.results.length;
+      //for (var i = 0; i < records.results.length; i++) {
+     
+    var a1=records.results[0].base_FK_Province;   
+   GPL_setLookupValue("war_fk_provincehidden", a1.Id, a1.Name, "base_province");  
+
+   var a2=records.results[0].base_FK_City;   
+   GPL_setLookupValue("war_fk_cityhidden", a2.Id, a2.Name, "base_city");  
+
+   var  a3= records.results[0].base_Street1;        
+   GPL_setFieldValue("war_street1hidden",a3);
+
+   var  a4= records.results[0].base_Street2;        
+   GPL_setFieldValue("war_street2hidden",a4);
+
+   var  a5= records.results[0].base_Street3;        
+   GPL_setFieldValue("war_stree3hidden",a5);
+
+   var  a6= records.results[0].base_Tel;        
+   GPL_setFieldValue("war_telhidden",a6);
+ //var optionValue = records.results[0].StatusCode.Value; 
+   //}
+}
+//***************************************************************************************
+   //}
+}
+else
+{
+GPL_setFieldValue("war_branchcodehidden","");
+GPL_clearLookupValue("war_fk_addresshidden");
+GPL_clearLookupValue("war_fk_provincehidden")
+GPL_clearLookupValue("war_fk_cityhidden")
+GPL_setFieldValue("war_street1hidden","");
+GPL_setFieldValue("war_street2hidden","");
+GPL_setFieldValue("war_stree3hidden","");
+GPL_setFieldValue("war_telhidden","");
+}
+}
+////////////////////////////////////Begin Fill issuecode/////////////////////////
+var currentUserId = Xrm.Page.context.getUserId();
+var currentUserRoles = Xrm.Page.context.getUserRoles();
+if(currentUserId!=null)
+{
+    var retrieveRecordsReq = new XMLHttpRequest();
+    var serverUrl = location.protocol + "//" + location.host + "/" + Xrm.Page.context.getOrgUniqueName();
+    var ODataPath = serverUrl + "/XRMServices/2011/OrganizationData.svc/SystemUserSet";
+    ODataPath = ODataPath + "?$select=BusinessUnitId";
+    ODataPath = ODataPath + " &$filter=SystemUserId  eq  guid'"+currentUserId+"'";
+    //ODataPath = ODataPath + " &order by =BusinessUnitId desc ";
+    ODataPath = ODataPath + " &$top=1 ";    
+    retrieveRecordsReq.open("GET", ODataPath, false);
+    retrieveRecordsReq.setRequestHeader("Accept", "application/json");
+    retrieveRecordsReq.setRequestHeader("Content-Type", "application/json; charset=utf-8");
+    retrieveRecordsReq.send(null);
+    records = JSON.parse(retrieveRecordsReq.responseText).d;
+     var RequestCount = records.results.length;
+    if(records.results.length!=0)
+    {
+     var  a1= records.results[0].BusinessUnitId;                   
+     }
+//***************************************************************************************
+if(a1.Id!=null)
+{
+    var retrieveRecordsReq = new XMLHttpRequest();
+    var serverUrl = location.protocol + "//" + location.host + "/" + Xrm.Page.context.getOrgUniqueName();
+    var ODataPath = serverUrl + "/XRMServices/2011/OrganizationData.svc/BusinessUnitSet";
+    ODataPath = ODataPath + "?$select=base_IssueCode";
+    ODataPath = ODataPath + " &$filter=BusinessUnitId  eq  guid'"+a1.Id+"'";
+    ODataPath = ODataPath + " &order by =base_IssueCode desc ";
+    ODataPath = ODataPath + " &$top=1 "; 
+    retrieveRecordsReq.open("GET", ODataPath, false);
+    retrieveRecordsReq.setRequestHeader("Accept", "application/json");
+    retrieveRecordsReq.setRequestHeader("Content-Type", "application/json; charset=utf-8");
+    retrieveRecordsReq.send(null);
+    records = JSON.parse(retrieveRecordsReq.responseText).d;
+     var RequestCount = records.results.length;    
+   if(records.results.length!=0)
+    {    
+    var issuecode=records.results[0].base_IssueCode;   
+   GPL_setFieldValue("inq_issuecode", issuecode);
+    }
+ }
+}
+////////////////////////////////////End Fill issuecode/////////////////////////

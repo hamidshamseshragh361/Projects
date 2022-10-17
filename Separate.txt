@@ -1,0 +1,63 @@
+Replace(",", "")
+------------------------ê–«‘ ‰ ò«„«Ì »Ì‰ «⁄œ«œ----------------------------
+onchange="txtNumber_change()"
+function txtNumber_change()
+{
+try
+{
+var l=Form1.txtNumber.value.length;
+for(i=0;i<l;i++)
+{
+Form1.txtNumber.value=Form1.txtNumber.value.replace(" ","");
+Form1.txtNumber.value=Form1.txtNumber.value.replace("+","");
+}	
+var no=Form1.document.all("txtNumber").value; var sign=""; var no1="";
+if(no.indexOf(".")!=-1) {no1=no.substring(no.length,no.indexOf(".")); no=no.substring(0,no.indexOf("."));}
+if(no.indexOf(",")!=-1)  no=RemoveSeperateNumber(document.all("txtNumber").value); 
+if(no.substring(0,1)=="-")  sign="-";
+else if(no.substring(0,1)=="+") {no=no.replace("+","");sign="";}
+no=Math.abs(no);
+if(no.toString()=="NaN"){Form1.document.all("txtNumber").value="";return;}
+if(no.toString().length>3)  Form1.document.all("txtNumber").value=sign+SeperateNumber(no,",")+(no1!=""?no1:"");  
+}
+catch(e) {Form1.document.all("txtNumber").value="";}
+}
+-----MAPPING
+Form1.txtNumber.value=dic.Item("Number");
+txtNumber_change();
+-----INSERT AND UPDATE     IN   btnOk_Click Calculate
+UIPP.Modules.Global_Functions sn=new UIPP.Modules.Global_Functions();--PAGE_LOAD  »«·«Ì
+sn.RemoveSeperateNumber(txtNumber.Text)
+------------------c#---ê–«‘ ‰ ò«„«Ì »Ì‰ «⁄œ«œ  ’ÕÌÕ---------------------------
+ public string separate(string AMOUNT)
+  {
+    AMOUNT=AMOUNT.Replace(",", "");
+    string floatpoint = "";
+    int index=-1;
+    int len=-1;
+    if (AMOUNT.IndexOf(".") != -1)
+    {
+      index=AMOUNT.IndexOf(".");
+      len=AMOUNT.Length;
+      floatpoint = AMOUNT.Substring(index, len - index);
+    }
+    if (index!=-1)
+      AMOUNT = AMOUNT.Substring(0, index);
+    bool sign = false;
+    if (AMOUNT.Substring(0, 1) == "-")
+    {
+      AMOUNT = AMOUNT.Substring(1, AMOUNT.Length - 1);
+      sign = true;
+    }
+    string a = "";
+    for (int i = 0; AMOUNT.Length > 3; i++)
+    {
+      a = "," + AMOUNT.Substring(AMOUNT.Length - 3, 3) + a;
+      AMOUNT = AMOUNT.Substring(0, AMOUNT.Length - 3);
+    }
+    a = AMOUNT + a;
+    if (sign)
+      a = "-" + a;
+    return (a + floatpoint);
+  }
+--------------------------------------------------------------------------------------

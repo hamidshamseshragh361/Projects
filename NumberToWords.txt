@@ -1,0 +1,132 @@
+USE [UIP]
+GO
+/****** Object:  UserDefinedFunction [dbo].[NumberToWords]    Script Date: 02/27/2013 08:35:32 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		<Author,,Name>
+-- Create date: <Create Date, ,>
+-- Description:	<Description, ,>
+-- =============================================
+Create FUNCTION [dbo].[NumberToWords](@Number Numeric (18, 0))RETURNS VARCHAR(8000) 
+AS 
+BEGIN  
+DECLARE @inputNumber VARCHAR(18)
+DECLARE @NumbersTable TABLE (number int, word VARCHAR(10))
+DECLARE @outputString VARCHAR(8000)
+DECLARE @length INT
+DECLARE @counter INT
+DECLARE @loops INT
+DECLARE @position INT
+DECLARE @chunk CHAR(3)
+DECLARE @tensones CHAR(2)
+DECLARE @hundreds CHAR(1)
+DECLARE @tens CHAR(1)
+DECLARE @ones CHAR(1)
+DECLARE @And nvarchar(3)
+DECLARE @Neg nvarchar(10) 
+    
+IF @Number = 0 return '’›—'   
+IF  Left(@Number ,1) <> '-'
+  SET  @Neg = ' '
+ELSE
+  BEGIN
+    SET  @Neg = '„‰›Ì '
+    SET  @Number = @Number * -1
+  END 
+SELECT @inputNumber = CONVERT(varchar(18), @Number)
+     , @outputString = ''
+     , @counter = 1
+SELECT @length   = LEN(@inputNumber)
+     , @position = LEN(@inputNumber) - 2
+     , @loops    = LEN(@inputNumber)/3  
+IF LEN(@inputNumber) % 3 <> 0 SET @loops = @loops + 1  
+INSERT INTO @NumbersTable   SELECT 0, ''
+    UNION ALL SELECT 1, ' Ìﬂ '       UNION ALL SELECT 2, ' œÊ '
+    UNION ALL SELECT 3, ' ”Â '       UNION ALL SELECT 4, ' çÂ«— '
+    UNION ALL SELECT 5, ' Å‰Ã '      UNION ALL SELECT 6, ' ‘‘ '
+    UNION ALL SELECT 7, ' Â›  '      UNION ALL SELECT 8, ' Â‘  '
+    UNION ALL SELECT 9, ' ‰Â '       UNION ALL SELECT 10, ' œÂ '
+    UNION ALL SELECT 11, ' Ì«“œÂ '   UNION ALL SELECT 12, ' œÊ«“œÂ '
+    UNION ALL SELECT 13, ' ”Ì“œÂ '   UNION ALL SELECT 14, ' çÂ«—œÂ '
+    UNION ALL SELECT 15, ' Å«‰“œÂ '  UNION ALL SELECT 16, ' ‘«‰“œÂ '
+    UNION ALL SELECT 17, ' Â›œÂ '    UNION ALL SELECT 18, ' ÂÌÃœÂ '
+    UNION ALL SELECT 19, ' ‰Ê“œÂ '   UNION ALL SELECT 20, ' »Ì”  '
+    UNION ALL SELECT 30, ' ”Ì '      UNION ALL SELECT 40, ' çÂ· '
+    UNION ALL SELECT 50, ' Å‰Ã«Â '   UNION ALL SELECT 60, ' ‘’  '
+    UNION ALL SELECT 70, ' Â› «œ '   UNION ALL SELECT 80, ' Â‘ «œ '
+    UNION ALL SELECT 90, ' ‰Êœ '     UNION ALL SELECT 100, ' ’œ '
+    UNION ALL SELECT 200, ' œÊÌ”  '  UNION ALL SELECT 300, ' ”Ì’œ '
+    UNION ALL SELECT 400, ' çÂ«—’œ ' UNION ALL SELECT 500, ' Å«‰’œ '
+    UNION ALL SELECT 600, ' ‘‘’œ '   UNION ALL SELECT 700, ' Â› ’œ '
+    UNION ALL SELECT 800, ' Â‘ ’œ '  UNION ALL SELECT 900, ' ‰Â’œ '  
+WHILE @counter <= @loops 
+BEGIN 
+SET @chunk = RIGHT('000' + SUBSTRING(@inputNumber, @position, 3), 3)      
+  IF @chunk <> '000' BEGIN
+     SELECT @tensones = SUBSTRING(@chunk, 2, 2)
+             , @hundreds = SUBSTRING(@chunk, 1, 1)
+             , @tens = SUBSTRING(@chunk, 2, 1)
+             , @ones = SUBSTRING(@chunk, 3, 1) 
+  IF CONVERT(INT, @tensones) <= 20 OR @Ones='0' BEGIN
+  if len(@outputString)>0
+  begin
+    set @And='Ê '
+  end
+  else
+  begin
+    set @And=''
+  end                     
+SET @outputString = (SELECT word
+                     FROM @NumbersTable
+                     WHERE @hundreds+'00'  = number)
+                     + case @hundreds when '0' then '' else 
+                     case @tensones when '00' then '' else 'Ê' end  end+
+                     (
+                     SELECT word
+                     FROM @NumbersTable
+                     WHERE @tensones = number)
+                   + CASE @counter WHEN 1 THEN '' 
+                     WHEN 2 THEN ' Â“«— ' WHEN 3 THEN ' „Ì·ÌÊ‰ '
+                     WHEN 4 THEN ' „Ì·Ì«—œ '  WHEN 5 THEN '  —Ì·ÌÊ‰ '
+                     WHEN 6 THEN '  —Ì·Ì«—œ ' ELSE '' END
+                    + @And + @outputString
+END
+ ELSE BEGIN 
+ if len(@outputString)>0
+ begin
+   set @And='Ê '
+ end
+ else
+ begin
+  set @And=''
+ end                                       
+SET @outputString = ' '
+   + (SELECT word
+      FROM @NumbersTable
+      WHERE @hundreds+'00'  = number)
+      + case @hundreds when '0' then '' else  'Ê' end
+      + (SELECT word
+      FROM @NumbersTable
+      WHERE   @tens+'0'  = number)
+      + 'Ê'
+      + (SELECT word
+         FROM @NumbersTable
+         WHERE  @ones = number)
+         + CASE @counter WHEN 1 THEN '' 
+           WHEN 2 THEN ' Â“«— ' WHEN 3 THEN ' „Ì·ÌÊ‰ '
+           WHEN 4 THEN ' „Ì·Ì«—œ '  WHEN 5 THEN '  —Ì·ÌÊ‰ '
+           WHEN 6 THEN '  —Ì·Ì«—œ ' ELSE '' END           
+         + @And + @outputString
+END          
+END 
+    SELECT @counter = @counter + 1
+         , @position = @position - 3 
+END 
+SET @outputString = LTRIM(RTRIM(REPLACE(@outputString, '  ', ' ')))
+SET @outputstring = UPPER(LEFT(@outputstring, 1)) + SUBSTRING(@outputstring, 2, 8000)
+SET @outputstring = @Neg + @outputstring 
+RETURN @outputString
+END

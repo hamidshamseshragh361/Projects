@@ -1,0 +1,10 @@
+a.HyperLink {font-family: Tahoma, Arial; font-size: 8pt; border: solid 1px #B0BDC4; font-weight: bold; padding: 3px 8px 3px 8px; margin: 0px 0px 0px 4px; vertical-align: middle; text-align: center; text-decoration: none; cursor: pointer;}
+
+BackColor:#F0F3EA    background-color: #DEF2FC;
+ForeColor:Black  Color:Black  
+BorderStyle:Solid
+BorderColor:#67686A
+BorderWidth:1px
+Height:23px
+
+a.HyperLink:hover { font-family: Tahoma, Arial; font-size: 8pt; border: 1px solid #087196; font-weight: bold; padding: 3px 8px 3px 8px; margin: 0px 0px 0px 4px; vertical-align: middle; text-align: center; text-decoration: underline; cursor: pointer; background-color: #DEF2FC;}

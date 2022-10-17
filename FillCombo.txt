@@ -1,0 +1,13 @@
+----------------------------------------------------------------------------FillCombo---------------------------------------------------------------------------
+IList<ProvinceInfo> ProvinceList = new List<ProvinceInfo>();
+   ProvinceBll ProvinceBll = new ProvinceBll();
+   ProvinceList = ProvinceBll.GetProvinceAll();
+   if (ProvinceList != null)
+   {
+    cmbProvince.DataSource = ProvinceList;
+    cmbProvince.DataTextField = "Description";
+    cmbProvince.DataValueField = "Id";
+    cmbProvince.DataBind();
+    cmbProvince.Items.Insert(0, "انتخاب کنید");
+    cmbProvince.Items[0].Value = "";
+   }

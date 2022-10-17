@@ -1,0 +1,41 @@
+////////////////Å—‘ »Â ’›ÕÂ////////////////
+<script language=javascript>
+    function SHyperlink_click() {
+        var SKeyword1;
+        var a = eval('document.getElementsByTagName("INPUT");');
+        var al = a.length;
+        for (i = 0; i <= al - 1; i++) {
+            if (a[i].id.indexOf("SKeyword1") != -1) {
+                break;
+            }
+        }
+        SKeyword1 = a[i].value;       
+        if (a[i].value != null && a[i].value != "")
+            window.open('http://www.bimehasia.com/AsiaInsuranceWeb/fa/Search.aspx?Par=' + a[i].value, '_self');
+    }
+    
+//////////////// Replace Char    (ﬂ  Ì)  ////////////////
+    function SKeyword1_change() {
+        var b = eval('document.getElementsByTagName("INPUT");');
+        var bl = b.length;
+        for (i = 0; i <= bl - 1; i++) {
+            if (b[i].id.indexOf("SKeyword1") != -1) {
+                break;
+            }
+        }
+        b = b[i].value;
+        bl = b.length;
+        for (i = 0; i <= bl - 1; i++) {
+            b = b.replace(String.fromCharCode(1705), String.fromCharCode(1603));
+            b= b.replace(String.fromCharCode(1740), String.fromCharCode(1610));
+        }
+        var c = eval('document.getElementsByTagName("INPUT");');
+        var cl = b.length;
+        for (i = 0; i <=cl - 1; i++) {
+            if (c[i].id.indexOf("SKeyword1") != -1) {
+                break;
+            }
+        }        
+        c[i].value = b;
+    }
+</script>

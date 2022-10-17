@@ -1,0 +1,37 @@
+﻿public void FillPrmInstallmentList()
+{
+int startRecord = grdTempDoc.CurrentPageIndex * grdTempDoc.PageSize;
+int endrecord = ((grdTempDoc.CurrentPageIndex + 1) * grdTempDoc.PageSize) + 1;
+int totalRecord = 0;
+WITH CTE AS
+(
+SELECT  Account4Desc,ROW_NUMBER() OVER (ORDER BY life.PrmInstallment.DocRow) AS RecordNumber,count(1) over() as TotalRecord
+ from life.PrmDebtorStatement 
+where   life.PrmInstallment.DeleteFlag='0'
+)SELECT * FROM CTE Where RecordNumber > StartRecord  AND RecordNumber < EndRecord
+//Fill DataSet
+//if(totalRecord>Top) grdTempDoc.VirtualItemCount =Top  else grdTempDoc.VirtualItemCount = totalRecord;
+grdTempDoc.VirtualItemCount = totalRecord;
+   grdTempDoc.DataSource = DataSet;
+   try
+   {
+    grdTempDoc.DataBind();
+   }
+   catch (Exception)
+   {
+    grdTempDoc.CurrentPageIndex = 0;
+    grdTempDoc.DataBind();
+   }  
+}
+
+protected void grdTempDoc_PageIndexChanged(object source, DataGridPageChangedEventArgs e)
+ {   
+   grdTempDoc.CurrentPageIndex = e.NewPageIndex;
+   FillPrmInstallmentList();   
+ }
+
+ protected void btnSearch_Click(object sender, EventArgs e)
+    {
+       //grdCircular.CurrentPageIndex = 0;
+       FillPrmInstallmentList();   
+    }

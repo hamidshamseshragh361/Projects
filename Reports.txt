@@ -1,0 +1,304 @@
+﻿'=Code.MiladiToShamsi(CDate(Microsoft.Crm.Reporting.RdlHelper.DateTimeUtility.ConvertUtcToLocalTime(DateTime.UtcNow, Parameters!CRM_UserTimeZoneName.Value)).ToString("g", Microsoft.Crm.Reporting.RdlHelper.ReportCultureInfo.GetCultureInfo(Parameters)))
+'=Code.MiladiToShamsi(CDate(Left(Fields!CreatedOn.Value,2)+"/"+Mid(Fields!CreatedOn.Value,4,2)+"/"+Mid(Fields!CreatedOn.Value,7,4)+" "+Right(Fields!CreatedOn.Value,11)))
+'=Code.MiladiToShamsi(CDate(FormatDateTime(Fields!CreatedOn.Value,"MM/dd/yyyy HH:mm:ss")))
+
+Public Function MiladiToShamsiDate(ByVal MDate As Date) As String
+
+MiladiToShamsiDate = “”
+Dim pc As New Globalization.PersianCalendar
+Dim Sal As Integer = pc.GetYear(MDate)
+Dim Mah As Integer = pc.GetMonth(MDate)
+Dim Roz As Integer = pc.GetDayOfMonth(MDate)
+MiladiToShamsiDate= Format(Sal, "0000") & "/" & Format(Mah, "00") & "/" & Format(Roz, "00")
+Return MiladiToShamsiDate
+
+End Function
+
+Public Function MiladiToShamsiTime(ByVal MDate As Date) As String
+
+MiladiToShamsiTime = “”
+Dim pc As New Globalization.PersianCalendar
+Dim Hour As Integer = pc.GetHour(MDate)
+Dim Minute As Integer = pc.GetMinute(MDate)
+Dim Second As Integer = pc.GetSecond(MDate)
+MiladiToShamsiTime=Format(Hour, "00")& ":" & Format(Minute, "00")'& ":" & Format(Second, "00")
+Return MiladiToShamsiTime
+
+End Function
+
+Public Function MiladiToShamsi(ByVal MDate As Date) As String
+
+MiladiToShamsi = “”
+Dim pc As New Globalization.PersianCalendar
+Dim Sal As Integer = pc.GetYear(MDate)
+Dim Mah As Integer = pc.GetMonth(MDate)
+Dim Roz As Integer = pc.GetDayOfMonth(MDate)
+Dim Hour As Integer = pc.GetHour(MDate)
+Dim Minute As Integer = pc.GetMinute(MDate)
+Dim Second As Integer = pc.GetSecond(MDate)
+MiladiToShamsi = Format(Sal, "0000") & "/" & Format(Mah, "00") & "/" & Format(Roz, "00") & " " & Format(Hour, "00")& ":" & Format(Minute, "00")'& ":" & Format(Second, "00")
+Return MiladiToShamsi
+
+End Function
+
+Public Function ShamsiToMiladi(ByVal MDate As String) As DateTime
+
+Dim Rooz As Integer=Integer.Parse(MDate.Substring(8, 2))
+Dim Maah As Integer=Integer.Parse(MDate.Substring(5, 2))
+Dim Saal As Integer=Integer.Parse(MDate.Substring(0, 4))
+Dim pc As New System.Globalization.PersianCalendar()
+ShamsiToMiladi=pc.ToDateTime(Saal, Maah, Rooz, 0, 0, 0, 0).ToString().Substring(0, 10)
+Return ShamsiToMiladi
+
+End Function
+
+Protected Function GetOnes(ByVal OneDigit As Integer) As String
+
+Dim mOnesArray(8) As String
+Dim mOneTensArray(9) As String
+Dim mTensArray(7) As String
+Dim mPlaceValues(4) As String
+
+mOnesArray(0) = "یک"
+mOnesArray(1) = "دو"
+mOnesArray(2) = "سه"
+mOnesArray(3) = "چهار"
+mOnesArray(4) = "پنج"
+mOnesArray(5) = "شش"
+mOnesArray(6) = "هفت"
+mOnesArray(7) = "هشت"
+mOnesArray(8) = "نه"
+
+mOneTensArray(0) = "ده"
+mOneTensArray(1) = "یازده"
+mOneTensArray(2) = "دوازده"
+mOneTensArray(3) = "سیزده"
+mOneTensArray(4) = "چهارده"
+mOneTensArray(5) = "پانزده"
+mOneTensArray(6) = "شانزده"
+mOneTensArray(7) = "هفده"
+mOneTensArray(8) = "هجده"
+mOneTensArray(9) = "نوزده"
+
+mTensArray(0) = "بیست"
+mTensArray(1) = "سی"
+mTensArray(2) = "چهل"
+mTensArray(3) = "پنجاه"
+mTensArray(4) = "شصت"
+mTensArray(5) = "هفتاد"
+mTensArray(6) = "هشتاد"
+mTensArray(7) = "نود"
+
+mPlaceValues(0) = "صد و"
+mPlaceValues(1) = "هزار و"
+mPlaceValues(2) = "میلیون و"
+mPlaceValues(3) = "میلیارد و"
+mPlaceValues(4) = "تریلیون و"
+
+        GetOnes = ""
+        If OneDigit = 0 Then
+            Exit Function
+        End If
+        GetOnes = mOnesArray(OneDigit - 1)
+
+End Function
+
+Protected Function GetTens(ByVal TensDigit As Integer) As String
+
+Dim mOnesArray(8) As String
+Dim mOneTensArray(9) As String
+Dim mTensArray(7) As String
+Dim mPlaceValues(4) As String
+
+mOnesArray(0) = "یک"
+mOnesArray(1) = "دو"
+mOnesArray(2) = "سه"
+mOnesArray(3) = "چهار"
+mOnesArray(4) = "پنج"
+mOnesArray(5) = "شش"
+mOnesArray(6) = "هفت"
+mOnesArray(7) = "هشت"
+mOnesArray(8) = "نه"
+
+mOneTensArray(0) = "ده"
+mOneTensArray(1) = "یازده"
+mOneTensArray(2) = "دوازده"
+mOneTensArray(3) = "سیزده"
+mOneTensArray(4) = "چهارده"
+mOneTensArray(5) = "پانزده"
+mOneTensArray(6) = "شانزده"
+mOneTensArray(7) = "هفده"
+mOneTensArray(8) = "هجده"
+mOneTensArray(9) = "نوزده"
+
+mTensArray(0) = "بیست"
+mTensArray(1) = "سی"
+mTensArray(2) = "چهل"
+mTensArray(3) = "پنجاه"
+mTensArray(4) = "شصت"
+mTensArray(5) = "هفتاد"
+mTensArray(6) = "هشتاد"
+mTensArray(7) = "نود"
+
+mPlaceValues(0) = "صد"
+mPlaceValues(1) = "هزار"
+mPlaceValues(2) = "میلیون"
+mPlaceValues(3) = "میلیارد"
+mPlaceValues(4) = "تریلیون"
+
+        GetTens = ""
+        If TensDigit = 0 Or TensDigit = 1 Then
+            Exit Function
+        End If
+        GetTens = mTensArray(TensDigit - 2)
+
+End Function
+
+Public Function ConvertNumberToWords(ByVal NumberValue As String) As String
+
+Dim mOnesArray(8) As String
+Dim mOneTensArray(9) As String
+Dim mTensArray(7) As String
+Dim mPlaceValues(4) As String
+
+mOnesArray(0) = "یک"
+mOnesArray(1) = "دو"
+mOnesArray(2) = "سه"
+mOnesArray(3) = "چهار"
+mOnesArray(4) = "پنج"
+mOnesArray(5) = "شش"
+mOnesArray(6) = "هفت"
+mOnesArray(7) = "هشت"
+mOnesArray(8) = "نه"
+
+mOneTensArray(0) = "ده"
+mOneTensArray(1) = "یازده"
+mOneTensArray(2) = "دوازده"
+mOneTensArray(3) = "سیزده"
+mOneTensArray(4) = "چهارده"
+mOneTensArray(5) = "پانزده"
+mOneTensArray(6) = "شانزده"
+mOneTensArray(7) = "هفده"
+mOneTensArray(8) = "هجده"
+mOneTensArray(9) = "نوزده"
+
+mTensArray(0) = "بیست"
+mTensArray(1) = "سی"
+mTensArray(2) = "چهل"
+mTensArray(3) = "پنجاه"
+mTensArray(4) = "شصت"
+mTensArray(5) = "هفتاد"
+mTensArray(6) = "هشتاد"
+mTensArray(7) = "نود"
+
+mPlaceValues(0) = "صد"
+mPlaceValues(1) = "هزار"
+mPlaceValues(2) = "میلیون"
+mPlaceValues(3) = "میلیارد"
+mPlaceValues(4) = "تریلیون"
+
+        Dim Delimiter As String = "  "
+        Dim TensDelimiter As String = " و "
+        Dim mNumberValue As String = ""
+        Dim mNumbers As String = ""
+        Dim mNumWord As String = ""
+        Dim mFraction As String = ""
+        Dim mNumberStack() As String
+        Dim j As Integer = 0
+        Dim i As Integer = 0
+        Dim mOneTens As Boolean = False
+        ConvertNumberToWords = ""
+        ' validate input
+        Try
+            j = CDbl(NumberValue)
+        Catch ex As Exception
+            ConvertNumberToWords = "عدد ورودی اشتباه است."
+            Exit Function
+        End Try
+        ' get fractional part {if any}
+        If InStr(NumberValue, ".") = 0 Then
+            ' no fraction
+            mNumberValue = NumberValue
+        Else
+            mNumberValue = Microsoft.VisualBasic.Left(NumberValue, InStr(NumberValue, ".") - 1)
+            mFraction = Mid(NumberValue, InStr(NumberValue, ".")) ' + 1)
+            mFraction = Math.Round(CSng(mFraction), 2) * 100
+            If CInt(mFraction) = 0 Then
+                mFraction = ""
+            Else
+                mFraction = "&& " & mFraction & "/100"
+            End If
+        End If
+        mNumbers = mNumberValue.ToCharArray
+        ' move numbers to stack/array backwards
+        For j = mNumbers.Length - 1 To 0 Step -1
+            ReDim Preserve mNumberStack(i)
+            mNumberStack(i) = mNumbers(j)
+            i += 1
+        Next
+        For j = mNumbers.Length - 1 To 0 Step -1
+            Select Case j
+                Case 0, 3, 6, 9, 12
+                    ' ones  value
+                    If Not mOneTens Then
+                        mNumWord &= GetOnes(Val(mNumberStack(j))) & Delimiter
+                    End If
+
+                    Select Case j
+                        Case 3
+                            ' thousands
+                            mNumWord &= mPlaceValues(1) & Delimiter
+                        Case 6
+                            ' millions
+                            mNumWord &= mPlaceValues(2) & Delimiter
+                        Case 9
+                            ' billions
+                            mNumWord &= mPlaceValues(3) & Delimiter
+                        Case 12
+                            ' trillions
+                            mNumWord &= mPlaceValues(4) & Delimiter
+                    End Select
+                Case Is = 1, 4, 7, 10, 13
+                    ' tens value
+                    If Val(mNumberStack(j)) = 0 Then
+                        mNumWord &= GetOnes(Val(mNumberStack(j - 1))) & Delimiter
+                        mOneTens = True
+                        Exit Select
+                    End If
+                    If Val(mNumberStack(j)) = 1 Then
+                        mNumWord &= mOneTensArray(Val(mNumberStack(j - 1))) & Delimiter
+                        mOneTens = True
+                        Exit Select
+                    End If
+                    mNumWord &= GetTens(Val(mNumberStack(j)))
+                    ' this places the tensdelimiter; check for succeeding 0
+                    If Val(mNumberStack(j - 1)) <> 0 Then
+                        mNumWord &= TensDelimiter
+                    End If
+                    mOneTens = False
+                Case Else
+                    ' hundreds value 
+                    mNumWord &= GetOnes(Val(mNumberStack(j))) & Delimiter
+                    If Val(mNumberStack(j)) <> 0 Then
+                        mNumWord &= mPlaceValues(0) & Delimiter
+                    End If
+            End Select
+        Next
+        Return mNumWord & mFraction
+
+End Function
+
+Public Function ToArabicNumber(txt As String) As String
+        Dim i,j As Integer
+        Dim c,result As String
+        j = Len (txt)
+        for i = 1 to j
+        c = mid(txt,i,1)
+        if Asc(c) >= 48 and Asc(c) <=57 then
+        result = result + ChrW (Val(c) + 1776)
+        else
+        result = result + c
+        end if
+        next i
+        Return result
+End Function

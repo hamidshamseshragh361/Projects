@@ -1,0 +1,48 @@
+------------------------------------------------«Ã—«Ì ê“«—‘ «“ œ«Œ· ›—„ Å«—«„ —Ìò----------------------------------------------------
+CrystalDecisions.CrystalReports.Engine.ReportDocument CR=new CrystalDecisions.CrystalReports.Engine.ReportDocument();
+CR=new Reports.CRPTLOG();//CR.Load(Server.MapPath("..\\..\\Reports\\CRPT_Amar_Policy.rpt"));
+CR.Refresh();
+-------------------------------------------- Å—‘œ‰ Å«—«„ —Â«Ì ê“«—‘  Ê”ÿ ›—„------------------------------------------------------
+//CR.SetParameterValue("name1","value1");//Å«—«„ —Â«Ì ê“«—‘ »«Ìœ Õ „« „ﬁœ«— œ«‘ Â »«‘‰œ
+------------------------------------------------------------------------------------------------------------------------------------------
+Session["ReportSource_name"]=CR;
+Session["Redirect_name"]="Rep_form.ASPX";
+Response.Redirect("Rep_View.ASPX");
+----------------------------------------Crystal Report  Viewer  œ— ·Êœ ›—„ »« ò„ò «“  -----------------------------------------------
+CrystalDecisions.CrystalReports.Engine.Database OCRDB;
+CrystalDecisions.CrystalReports.Engine.Tables     OCRTables;
+CrystalDecisions.Shared.ConnectionInfo  OCRConnectionInfo = new ConnectionInfo();
+CrystalDecisions.Shared.TableLogOnInfo OCRTableLogonInfo = new TableLogOnInfo();
+OCRDB=(Session["ReportSource_name"] as CrystalDecisions.CrystalReports.Engine.ReportDocument).Database;
+OCRTables = OCRDb.Tables;
+OCRConnectionInfo.ServerName = "DESIGN-SERVER";
+OCRConnectionInfo.DatabaseName = "NEWLIFE";
+OCRConnectionInfo.UserID = "sa";
+OCRConnectionInfo.Password = "eslami";
+foreach (CrystalDecisions.CrystalReports.Engine.Table  OCRTable in OCRTables)
+{
+OCRTableLogonInfo = OCRTable.LogOnInfo;
+OCRTableLogonInfo.ConnectionInfo = OCRConnectionInfo;
+OCRTable.ApplyLogOnInfo(OCRTableLogonInfo);
+}
+Crv_View.Visible=true;
+Crv_View.ReportSource=Session["ReportSource_name"];
+//ò·Ìœ »«“ê‘  ----> Response.Redirect(Session["Redirect_name"].ToString());
+-------------------------------IN PAGE FOOTER------------------Ã„⁄ ’›Õ«  ﬁ»· œ— ê“«—‘----------------------------------------
+@PRE1         Ã„⁄ ’›Õ«  ﬁ»· 
+WhilePrintingRecords;
+numberVar PRE1;
+----------------------------------------------------------
+@CUR1        Ã„⁄ «Ì‰ ’›ÕÂ
+WhilePrintingRecords;
+({@F_SUM_PAY_AMOUNT})-numberVar PRE1;
+----------------------------------------------------------
+@TOT1        Ã„⁄ ’›Õ«  ﬁ»· »« «Ì‰ ’›ÕÂ
+WhilePrintingRecords;
+({@F_SUM_PAY_AMOUNT});
+----------------------------------------------------------
+@STORE1        SUPRESS=TRUE    „ €Ì— „Œ›Ì
+EvaluateAfter ({@PRE1});
+EvaluateAfter ({@CUR1});
+numberVar PRE1:=({@F_SUM_PAY_AMOUNT});
+----------------------------------------------------------

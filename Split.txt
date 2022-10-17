@@ -1,0 +1,93 @@
+﻿-----------------------------------------------------Split------------------------------------------------------------
+ declare @InputString varchar(4000)
+ declare @SplitString varchar(4000)
+ declare @Start INT
+ declare @End INT 
+ set @InputString='1,2,3'
+ set @Start=1   
+ set @End=CHARINDEX(',',@InputString) 
+ while @Start<LEN(@InputString)+1
+ begin 
+   if @End=0 set @End=LEN(@InputString)+1                      
+   set @SplitString=SUBSTRING(@InputString,@Start,@End-@Start)        
+   print @SplitString
+   set @Start=@End+1 
+   set @End=CHARINDEX(',',@InputString,@Start)        
+ end 
+-------------------------------------------------------------------------------------------------------------------------         
+USE [OldLife]
+GO
+/****** Object:  StoredProcedure [life].[dpPrmInstallmentFullById1]    Script Date: 10/15/2013 14:15:01 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+ALTER PROCEDURE [life].[dpPrmInstallmentFullById1] 
+(
+ @Id bigint,
+ @UpdateDate char(10),
+ @UpdateTime char(5),
+ @UserId uniqueidentifier 
+ )
+AS
+BEGIN	
+	    SET NOCOUNT OFF; 
+	    declare @DocType int
+        declare @DocNo	 int	
+        declare @DocDate char(10)	
+        declare @DocRow	 int	
+        declare @DocRows varchar(1000)
+        declare @DocRows1 varchar(1000)   
+        declare @DeleteFlag bit 
+        declare @index int    
+        with cte as
+        (
+        select *
+        from life.PrmInstallment 
+        where Id=@Id
+        )select @DocType=DocType,@DocNo=DocNo,@DocDate=DocDate,@DocRow=DocRow from cte;
+        set @DocRows=(select top 1 isnull(DocRows,'') 
+                      from life.ManualReceiptAddRe 
+                      where DocType=@DocType and DocNo=@DocNo and DocDate=@DocDate and DocRows like '%'+ltrim(rtrim(str(@DocRow)+','))+'%')                	        
+       
+        update life.PrmInstallment
+		set    DeleteFlag='1',UpdateDate=@UpdateDate,UpdateTime=@UpdateTime,UserId=@UserId
+		where  Id=@Id 				
+		
+		set @DocRows1=@DocRows		
+		set @DeleteFlag=1    				
+        set @index =-1                            
+        if(@DocRows1 is null or LEN(ltrim(rtrim(@DocRows1)))<=0) 
+        begin              
+         set @DeleteFlag=0       
+        end
+        while (LEN(ltrim(rtrim(@DocRows1)))>0) 
+        begin          
+          set @index=CHARINDEX(',',@DocRows1) 
+          if(@index=0 AND LEN(@DocRows1)>0)  
+           begin                     
+            if((select top 1 DeleteFlag from life.PrmInstallment where DocType=@DocType and DocNo=@DocNo and DocDate=@DocDate and DocRow=@DocRows1)='0')             
+              begin              
+              set @DeleteFlag=0             
+              end
+            break
+           end           
+          else  
+           begin                              
+            if((select top 1 DeleteFlag from life.PrmInstallment where DocType=@DocType and DocNo=@DocNo and DocDate=@DocDate and DocRow=substring(@DocRows1,1,@index-1))='0')
+            begin              
+              set @DeleteFlag=0
+              break
+            end
+            set @DocRows1=RIGHT(@DocRows1,(LEN(@DocRows1)-@index))                     
+           end
+         end
+		if(@DeleteFlag=1)
+		begin		 
+		 update life.ManualReceiptAddRe
+		 set ChequeOrReceiptNo=''
+		 where DocType=@DocType and DocNo=@DocNo and DocDate=@DocDate and DocRows=@DocRows
+		end								
+		
+		RETURN @@ROWCOUNT	
+END

@@ -1,0 +1,136 @@
+﻿//Protocol_Domain_Port Must Be Match
+var purl,ppurl,ppurl2,ppurl21;
+purl=window.location.href;
+ppurl=purl.toString().split("/");
+if(ppurl[2].indexOf(":")==-1 )
+{
+ppurl2=ppurl[2]+":8080"
+}
+else
+{
+ppurl21=ppurl[2].split(":");
+ppurl2=ppurl21[0];
+}
+//window.open(''+ppurl[0]+'//'+ppurl2+'/inquirysystem/webui/inquiryformedit.aspx?purl='+purl+'&entityid='+entityid+'&bundleid='+bundleid+'', "_parent", "toolbar=yes, scrollbars=yes, resizable=yes, top=0, left=0, width=1000, height=800");
+window.open(''+ppurl[0]+'//'+ppurl2+'/inquirysystem/webui/inquiryformedit.aspx?purl='+purl+'&entityid='+entityid+'&bundleid='+bundleid+'', "_parent");
+//C# btnReturn_Click()
+try
+      {
+        //Response.Redirect("http://172.16.25.209:8080/CRM2015Development/main.aspx#321375381", false);        
+        if (Request.QueryString["purl"] != null && Request.QueryString["purl"].ToString().Trim() != "")
+        {
+          string[] ppurl = Request.QueryString["purl"].ToString().Split('/');
+          Response.Redirect(""+ppurl[0]+"//" + ppurl[2] + "/" + ppurl[3] + "/main.aspx#321375381", false);  
+        }
+        else
+        {
+          string purl = "http://172.16.25.213/crm2015DVE/main.aspx?etc=10056&extraqs=%3f_gridType%3d10056%26etc%3d10056%26id%3d%257b1160CA50-B5B9-E411-80CB-005056AF4F2D%257d%26rskey%3d%257b5593FCCD-3384-40F0-9BB6-EE31955A2D3B%257d&pagemode=iframe&pagetype=entityrecord&rskey=%7b5593FCCD-3384-40F0-9BB6-EE31955A2D3B%7d";    
+          string[] ppurl = purl.Split('/');
+          Response.Redirect(""+ppurl[0]+"//" + ppurl[2] + "/" + ppurl[3] + "/main.aspx#321375381", false);
+        }                           
+      }
+      catch(Exception)
+      {
+        Response.Redirect("PageNotFound.aspx",false);
+      }
+//alert("abc");
+//window.confirm('آيا به حذف مطمئن هستيد؟');
+//btnReturn.Attributes.Add("onclick", "ClosePopupRefreshParent()");
+   
+//function ClosePopupRefreshParent() 
+//{
+ //   try {
+ //       window.opener.location.reload();
+ //       window.close();
+ //   }
+  //  catch (e) {
+  //  }
+//}
+
+var xmlHttp;
+
+function GetXmlHttpObject()
+ {
+    var xmlHttp = null;
+    try
+    {
+     xmlHttp = new XMLHttpRequest();
+    }
+    catch (e) 
+    {
+     try
+     {
+      xmlHttp = new ActiveXObject("Msxml2.XMLHTTP");
+      }
+     catch (e) 
+     {
+       xmlHttp = new ActiveXObject("Microsoft.XMLHTTP");
+     }
+    }
+    return xmlHttp;
+}
+
+function load()
+{
+var mode=GPL_getFormType();
+if(mode=="create")
+{
+GPL_disableField("inq_fk_product", true);
+GPL_disableField("inq_fk_insurancebranch", true);
+alert(".لطفا فرم را ذخیره نمائید تا انتخاب باندل زیر رشته فعال گردد");
+}
+else 
+{
+GPL_disableField("inq_fk_product", false);
+GPL_disableField("inq_fk_insurancebranch", false);
+GPL_setRequirementLevel("inq_fk_product", "required")
+GPL_setRequirementLevel("inq_fk_insurancebranch", "required")
+}
+}
+
+function fk_product_change()
+{
+  xmlHttp = GetXmlHttpObject();
+    if (xmlHttp==null) {
+        alert(".این مرورگر آژاکس را پشتیبانی نمی کند");
+        return;
+    }
+var entityid=Xrm.Page.data.entity.getId();
+var bundleid=GPL_getLookupGuid("inq_fk_product");
+if(entityid!=null && bundleid!=null)
+{
+GPL_showField("inq_waiting", true);
+var purl,ppurl,ppurl2,ppurl21;
+purl=window.location.href;
+ppurl=purl.toString().split("/");
+if(ppurl[2].indexOf(":")==-1 )
+{
+ppurl2=ppurl[2]+":8080"
+}
+else
+{
+ppurl21=ppurl[2].split(":");
+ppurl2=ppurl21[0];
+}   
+    var url= ""+ppurl[0]+"//"+ppurl2+"/inquirysystem/webui/inquiryformhelper.aspx";  
+    url=url+"?queryno=1&purl="+purl+"&entityid="+entityid+"&bundleid="+bundleid+"";
+    url=url+"&sid="+Math.random();
+    //alert(url);
+    xmlHttp.onreadystatechange = stateChanged;
+    xmlHttp.open("GET",url,true);
+    xmlHttp.send(null);
+}
+}
+
+function stateChanged() 
+{
+  var s;
+  if (xmlHttp.readyState==4) 
+  {
+     GPL_showField("inq_waiting", false);
+     s= xmlHttp.responseText;
+     alert(s);
+     Xrm.Page.data.save();
+     Xrm.Page.data.refresh();
+  }    
+}

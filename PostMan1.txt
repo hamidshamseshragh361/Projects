@@ -1,0 +1,602 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using System.Text;
+using System.Data;
+using System.Configuration;
+using System.Collections;
+using System.Web.Security;
+using System.Web.UI.HtmlControls;
+using System.IO;
+using System.Globalization;
+using System.Reflection;
+using System.Data.OleDb;
+using System.Xml;
+using WebServices;
+using System.Web.Services.Protocols;
+using System.Security.Principal;
+using System.Security.Cryptography.X509Certificates;
+using System.Net;
+using System.Net.Http;
+using Newtonsoft.Json;
+using System.Web.Script.Serialization;
+
+/*
+using ir.centinsur.reinsure;
+using CMS.GlobalHelper;
+using CMS.SiteProvider;
+using CMS.FormControls;
+using CMS.UIControls;
+using CMS.CMSHelper;
+using CMS.DataEngine;
+using CMS.ExtendedControls;
+using CMS.CMSHelper;
+using CMS.SettingsProvider;
+using CMS.PortalControls;
+using CMS.Ecommerce;
+using CMS.DocumentEngine;
+using CMS.CMSHelper;
+using CMS.FormEngine;
+using CMS.IDataConnectionLibrary;
+using CMS.SettingsProvider;
+using CMS.PortalEngine;
+using AsiaEntityService;
+*/
+
+
+namespace WebServices
+{
+    public partial class ListDmgBimeshodeNew : System.Web.UI.UserControl
+    {
+        public string result;
+        ListDmgBimeshodeInfo[] ListDmgBimeshodeInfo1;
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            ControlRefresh();
+        }
+        private void ControlRefresh()
+        {
+            txtcodemelli.Focus();
+            OutputLabel.Text = "";
+            RequestButton.Visible = true;
+            p1.Enabled = true;
+        }
+        protected void RequestButton_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (txtcodemelli.Text.Trim() == "")
+                {
+                    OutputLabel.Text = "کد ملی بیمه شده باید پر گردد.";
+                    return;
+                }
+                if (txtcodemelli.Text.Trim().Length != 10)
+                {
+                    OutputLabel.Text = "کد ملی بیمه شده باید 10 رقمی باشد.";
+                    return;
+                }
+                long codemelli1 = 0;
+                if (!long.TryParse(txtcodemelli.Text, out codemelli1))
+                {
+                    OutputLabel.Text = "فرمت کد ملی بیمه شده باید عددی  باشد.";
+                    return;
+                }
+                if (txtCmnId.Text.Trim() != "")
+                {
+                    long CmnId1 = 0;
+                    if (!long.TryParse(txtCmnId.Text, out CmnId1))
+                    {
+                        OutputLabel.Text = "فرمت کد رایانه بیمه شده باید عددی  باشد.";
+                        return;
+                    }
+                }
+                if (txtFromHvDate.Text.Trim() == "")
+                {
+                    OutputLabel.Text = "از تاریخ حواله باید پر گردد.";
+                    return;
+                }
+                if (txtFromHvDate.Text.Trim() != "")
+                {
+                    if (CHECK_DATE_F(txtFromHvDate.Text.Trim()) == false)
+                    {
+                        OutputLabel.Text = "فرمت از تاریخ حواله باید به شکل yyyy/mm/dd  باشد.";
+                        return;
+                    }
+                }
+                if (txtToHvDate.Text.Trim() == "")
+                {
+                    OutputLabel.Text = "تا تاریخ حواله باید پر گردد.";
+                    return;
+                }
+                if (txtToHvDate.Text.Trim() != "")
+                {
+                    if (CHECK_DATE_F(txtToHvDate.Text.Trim()) == false)
+                    {
+                        OutputLabel.Text = "فرمت تا تاریخ حواله باید به شکل yyyy/mm/dd  باشد.";
+                        return;
+                    }
+                }
+                if (txtFromHvDate.Text.Trim() != "" && txtToHvDate.Text.Trim() != "")
+                {
+                    if (txtToHvDate.Text.CompareTo(txtFromHvDate.Text) < 0)
+                    {
+                        OutputLabel.Text = "تا تاریخ حواله باید از تاریخ حواله بزرگتر باشد.";
+                        return;
+                    }
+                }                                
+                //-------------------------------------------------------------------------------------------------------------------------                
+                //Login
+                string authenticationToken1 = "";
+                HttpClient httpClient1 = new HttpClient();
+                Uri uri1 = new Uri("https://services01.bimehasia.ir/bimesitemvc/api/EITAuthentication/Login");
+                HttpRequestMessage request1 = new HttpRequestMessage(HttpMethod.Post, uri1);
+                request1.Headers.Add("userName", "eit");
+                request1.Headers.Add("password", "Doyour20..");
+                HttpResponseMessage response1;
+                try
+                {
+                    response1 = httpClient1.SendAsync(request1).Result;
+                }
+                catch (Exception)
+                {
+                    OutputLabel.Text = "سرور با خطا مواجه شده است.";
+                    return;
+                }
+                finally
+                {
+                    string LastRequestUrl1 = uri1.ToString();
+                }
+                try
+                {
+                    authenticationToken1 = response1.Headers.GetValues("authenticationToken").FirstOrDefault();
+                }
+                catch (Exception)
+                {
+                    OutputLabel.Text = "نام کاربری یا رمز عبور معتبر نیست یا سرور قطع می باشد.";
+                    return;
+                }
+                if (authenticationToken1 == "")
+                {
+                    OutputLabel.Text = "نام کاربری یا رمز عبور معتبر نیست یا سرور قطع می باشد.";
+                    return;
+                }
+                //-------------------------------------------------------------------------------------------------------------------------            
+                //ListDmgBimeshode
+                HttpClient httpClient2 = new HttpClient();
+                HttpContent HttpContent2;
+                Uri uri2 = new Uri("https://services01.bimehasia.ir/BimeSiteMVC/api/reports/32322_ListDmgBimeshode_Web");
+                HttpRequestMessage request2 = new HttpRequestMessage(HttpMethod.Post, uri2);
+                request2.Headers.Add("authenticationToken", authenticationToken1);
+
+                string codemelli = "null";
+                if (txtcodemelli.Text.Trim() != "") codemelli = "\"" + txtcodemelli.Text.Trim() + "\"";
+
+                string CmnId = "null";
+                if (txtCmnId.Text.Trim() != "") CmnId = "\"" + txtCmnId.Text.Trim() + "\"";
+
+                string BId = "null";
+                if (txtBId.Text.Trim() != "") BId = "\"" + txtBId.Text.Trim() + "\"";
+
+                string FromHvDate = "null";
+                if (txtFromHvDate.Text.Trim() != "") FromHvDate = "\"" + txtFromHvDate.Text.Trim() + "\""; else FromHvDate = "\"" + "1300/01/01" + "\"";
+
+                string ToHvDate = "null";
+                if (txtToHvDate.Text.Trim() != "") ToHvDate = "\"" + txtToHvDate.Text.Trim() + "\""; else ToHvDate = "\"" + "1600/01/01" + "\"";
+
+                string PazireshCode = "null";
+                //if (txtPazireshCode.Text.Trim() != "") PazireshCode = "\"" + txtPazireshCode.Text.Trim() + "\"";
+
+                string Body = "{\"reportParameters\": [{\"Name\": \"CodeMelli\",\"Value\": " + codemelli + "},{\"Name\": \"CmnId\",\"Value\": " + CmnId + "},{\"Name\": \"BId\",\"Value\": " + BId + "},{\"Name\": \"FromHvDate\",\"Value\": " + FromHvDate + "},{\"Name\": \"ToHvDate\",\"Value\": " + ToHvDate + "},{\"Name\": \"PazireshCode\",\"Value\": " + PazireshCode + "}]}";
+                request2.Content = new StringContent(Body, Encoding.UTF8, "application/json");
+
+                HttpResponseMessage response2;
+                try
+                {
+                    response2 = httpClient2.SendAsync(request2).Result;
+                }
+                catch (Exception)
+                {
+                    OutputLabel.Text = "سرور با خطا مواجه شده است.";
+                    return;
+                }
+                finally
+                {
+                    string LastRequestUrl2 = uri2.ToString();
+                }
+                string reasonPhrase = HttpUtility.UrlDecode(response2.ReasonPhrase);
+                //string content2 = string.Format("{0}:{1}\r\nDetails\r\n{2}", response2.StatusCode, reasonPhrase, response2.Content.ReadAsStringAsync().Result);
+                string content2 = response2.Content.ReadAsStringAsync().Result.ToString();
+                if (!response2.IsSuccessStatusCode)
+                {
+                    //txtListDmgBimeshode.Text = "";                   .
+                    try
+                    {
+                        grdListDmgBimeshode.CurrentPageIndex = 0;
+                        grdListDmgBimeshode.DataBind();
+                    }
+                    catch (Exception)
+                    {                        
+                    }
+                    OutputLabel.Text = "اطلاعات ورودی معتبر نیست یا سرور قطع می باشد.";
+                    return;
+                }
+                else
+                    OutputLabel.Text = "عملیات با موفقیت انجام شد .";
+
+                //Begin New Code
+                //string json = "[{Name:'John Simith',Age:35},{Name:'Pablo Perez',Age:34}]";
+                content2 = content2.Replace("\n", "");
+                content2 = content2.Replace("\r", "");
+                content2 = content2.Replace("{  \"Command\":", "");
+                content2 = content2.Replace("]}", "]");
+
+                JavaScriptSerializer js = new JavaScriptSerializer();
+                ListDmgBimeshodeInfo[] ListDmgBimeshodeInfo = js.Deserialize<ListDmgBimeshodeInfo[]>(content2);
+                if (ListDmgBimeshodeInfo != null && ListDmgBimeshodeInfo.Length > 0)
+                {                   
+                    int count = ListDmgBimeshodeInfo.Length;
+                    for (int i = 0; i < count && ListDmgBimeshodeInfo[i] != null; i++)
+                    {                       
+                        string DarkhastiAmount = (ListDmgBimeshodeInfo[i].DarkhastiAmount != null ? separate(ListDmgBimeshodeInfo[i].DarkhastiAmount.ToString().Replace(".0000", "")) : "0");
+                        ListDmgBimeshodeInfo[i].DarkhastiAmount = DarkhastiAmount;
+                        string Mablagh = (ListDmgBimeshodeInfo[i].Mablagh != null ? separate(ListDmgBimeshodeInfo[i].Mablagh.ToString().Replace(".0000", "")) : "0");
+                        ListDmgBimeshodeInfo[i].Mablagh = Mablagh;
+                        string Kosurat = (ListDmgBimeshodeInfo[i].Kosurat != null ? separate(ListDmgBimeshodeInfo[i].Kosurat.ToString().Replace(".0000", "")) : "0");
+                        ListDmgBimeshodeInfo[i].Kosurat = Kosurat;                        
+                        string TaeedAmount = (ListDmgBimeshodeInfo[i].TaeedAmount != null ? separate(ListDmgBimeshodeInfo[i].TaeedAmount.ToString().Replace(".0000", "")) : "0");
+                        ListDmgBimeshodeInfo[i].TaeedAmount = TaeedAmount;
+                        string TaeedAmountNew = (ListDmgBimeshodeInfo[i].TaeedAmountNew != null ? separate(ListDmgBimeshodeInfo[i].TaeedAmountNew.ToString().Replace(".0000", "")) : "0");
+                        ListDmgBimeshodeInfo[i].TaeedAmountNew = TaeedAmountNew;                       
+                        string Franshiz = (ListDmgBimeshodeInfo[i].Franshiz != null ? separate(ListDmgBimeshodeInfo[i].Franshiz.ToString().Replace(".0000", "")) : "0");
+                        ListDmgBimeshodeInfo[i].Franshiz = Franshiz;                                                                                                                    
+                    }                   
+                    ListDmgBimeshodeInfo1 = ListDmgBimeshodeInfo;
+                    FillgrdListDmgBimeshode(ListDmgBimeshodeInfo1);                                
+                }
+                //End New Code
+                RequestButton.Visible = false;
+                p1.Enabled = false;
+            }
+            catch (Exception exp)
+            {
+                OutputLabel.Text = "خطا: " + exp.Message;
+            }
+            /*
+            if (txtIssueDate.Text != null && txtIssueDate.Text != "" && txtBarNo.Text != null && txtBarNo.Text != "")
+            {
+                CustomTableItemProvider customTableProvider = new CustomTableItemProvider(CMSContext.CurrentUser);
+                string customTableClassName = "Custom.OrderRecord";
+                DataClassInfo customTable = DataClassInfoProvider.GetDataClass(customTableClassName);
+                if (customTable != null)
+                {
+                    CustomTableItem newCustomTableItem = CustomTableItem.New(customTableClassName, customTableProvider);
+                    newCustomTableItem.SetValue("Number", ValidationHelper.GetString(txtBarNo.Text, string.Empty));
+                    newCustomTableItem.SetValue("Date", ValidationHelper.GetString(txtIssueDate.Text, string.Empty));
+                    newCustomTableItem.SetValue("Message", ValidationHelper.GetString(OutputLabel.Text, string.Empty));
+                    newCustomTableItem.Insert();
+                }
+            }
+            */
+        }
+        public class ListDmgBimeshodeInfo
+        {
+            public string CodeMelli { get; set; }//کد ملی               
+            public string DmgKindText { get; set; }//گروه بندی خسارت
+            public string FullBno { get; set; }//شماره کامل بیمه نامه        
+            public string IdBimeName { get; set; }//کد رایانه بیمه نامه          
+            public string CmnId { get; set; }//کد رایانه بیمه شده
+            public string AsliBimeShodeText { get; set; }//نام بیمه شده اصلی
+            public string Personelcode { get; set; }//کد پرسنلی
+            public string Bimari { get; set; }//بیماری
+            public string Tarikh { get; set; }//تاریخ بیماری
+            public string HvDate { get; set; }//تاریخ حواله
+            public string MarkazDarmani { get; set; }//مرگز درمانی
+            public string MoarrefinameId { get; set; }//سریال معرفینامه
+            public string Status { get; set; }//وضعیت پرونده
+            public string DarkhastiAmount { get; set; }//مبلغ درخواستی
+            public string Mablagh { get; set; }//مبلغ = مبلغ پرداختی نهایی
+            public string Kosurat { get; set; }//کسورات            
+            public string TaeedAmount { get; set; }//مبلغ پرداختی   
+            public string Franshiz { get; set; }//مبلغ فرانشیز          
+            public string TaeedAmountNew { get; set; }// مبلغ پرداختی نهایی                     
+            public string PayDate { get; set; } //تاریخ پرداخت                                                                             
+            public string NameKhesaratDide { get; set; } //نام خسارت دیده                                                                                         
+        }
+        public bool CHECK_DATE_F(string FARSI_DATE)
+        {
+            if (FARSI_DATE.Length != 10 || ((FARSI_DATE.Substring(4, 1) != "/") || (FARSI_DATE.Substring(7, 1) != "/")))
+            {
+                return false;  //کنترل تاريخ
+            }
+            if ((FARSI_DATE.Substring(0, 1) != "1" && FARSI_DATE.Substring(0, 1) != "2" && FARSI_DATE.Substring(0, 1) != "3" && FARSI_DATE.Substring(0, 1) != "4" && FARSI_DATE.Substring(0, 1) != "5" && FARSI_DATE.Substring(0, 1) != "6" && FARSI_DATE.Substring(0, 1) != "7" && FARSI_DATE.Substring(0, 1) != "8" && FARSI_DATE.Substring(0, 1) != "9") || (FARSI_DATE.Substring(1, 1) != "0" && FARSI_DATE.Substring(1, 1) != "1" && FARSI_DATE.Substring(1, 1) != "2" && FARSI_DATE.Substring(1, 1) != "3" && FARSI_DATE.Substring(1, 1) != "4" && FARSI_DATE.Substring(1, 1) != "5" && FARSI_DATE.Substring(1, 1) != "6" && FARSI_DATE.Substring(1, 1) != "7" && FARSI_DATE.Substring(1, 1) != "8" && FARSI_DATE.Substring(1, 1) != "9") || (FARSI_DATE.Substring(2, 1) != "0" && FARSI_DATE.Substring(2, 1) != "1" && FARSI_DATE.Substring(2, 1) != "2" && FARSI_DATE.Substring(2, 1) != "3" && FARSI_DATE.Substring(2, 1) != "4" && FARSI_DATE.Substring(2, 1) != "5" && FARSI_DATE.Substring(2, 1) != "6" && FARSI_DATE.Substring(2, 1) != "7" && FARSI_DATE.Substring(2, 1) != "8" && FARSI_DATE.Substring(2, 1) != "9") || (FARSI_DATE.Substring(3, 1) != "0" && FARSI_DATE.Substring(3, 1) != "1" && FARSI_DATE.Substring(3, 1) != "2" && FARSI_DATE.Substring(3, 1) != "3" && FARSI_DATE.Substring(3, 1) != "4" && FARSI_DATE.Substring(3, 1) != "5" && FARSI_DATE.Substring(3, 1) != "6" && FARSI_DATE.Substring(3, 1) != "7" && FARSI_DATE.Substring(3, 1) != "8" && FARSI_DATE.Substring(3, 1) != "9"))
+            {
+                return false; //کنترل سال
+            }
+
+            if (FARSI_DATE.Substring(5, 2) != "01" && FARSI_DATE.Substring(5, 2) != "02" && FARSI_DATE.Substring(5, 2) != "03" && FARSI_DATE.Substring(5, 2) != "04" && FARSI_DATE.Substring(5, 2) != "05" && FARSI_DATE.Substring(5, 2) != "06" && FARSI_DATE.Substring(5, 2) != "07" && FARSI_DATE.Substring(5, 2) != "08" && FARSI_DATE.Substring(5, 2) != "09" && FARSI_DATE.Substring(5, 2) != "10" && FARSI_DATE.Substring(5, 2) != "11" && FARSI_DATE.Substring(5, 2) != "12")
+            {
+                return false; // کنترل ماه
+            }
+
+            if (FARSI_DATE.Substring(8, 2) != "01" && FARSI_DATE.Substring(8, 2) != "02" && FARSI_DATE.Substring(8, 2) != "03" && FARSI_DATE.Substring(8, 2) != "04" && FARSI_DATE.Substring(8, 2) != "05" && FARSI_DATE.Substring(8, 2) != "06" && FARSI_DATE.Substring(8, 2) != "07" && FARSI_DATE.Substring(8, 2) != "08" && FARSI_DATE.Substring(8, 2) != "09" && FARSI_DATE.Substring(8, 2) != "10" && FARSI_DATE.Substring(8, 2) != "11" && FARSI_DATE.Substring(8, 2) != "12" && FARSI_DATE.Substring(8, 2) != "13" && FARSI_DATE.Substring(8, 2) != "14" && FARSI_DATE.Substring(8, 2) != "15" && FARSI_DATE.Substring(8, 2) != "16" && FARSI_DATE.Substring(8, 2) != "17" && FARSI_DATE.Substring(8, 2) != "18" && FARSI_DATE.Substring(8, 2) != "19" && FARSI_DATE.Substring(8, 2) != "20" && FARSI_DATE.Substring(8, 2) != "21" && FARSI_DATE.Substring(8, 2) != "22" && FARSI_DATE.Substring(8, 2) != "23" && FARSI_DATE.Substring(8, 2) != "24" && FARSI_DATE.Substring(8, 2) != "25" && FARSI_DATE.Substring(8, 2) != "26" && FARSI_DATE.Substring(8, 2) != "27" && FARSI_DATE.Substring(8, 2) != "28" && FARSI_DATE.Substring(8, 2) != "29" && FARSI_DATE.Substring(8, 2) != "30" && FARSI_DATE.Substring(8, 2) != "31")
+            {
+                return false; //کنترل روز
+            }
+            if ((FARSI_DATE.Substring(5, 2) == "07" || FARSI_DATE.Substring(5, 2) == "08" || FARSI_DATE.Substring(5, 2) == "09" || FARSI_DATE.Substring(5, 2) == "10" || FARSI_DATE.Substring(5, 2) == "11" || FARSI_DATE.Substring(5, 2) == "12") && (FARSI_DATE.Substring(8, 2) == "31"))
+            {
+                return false; //کنترل تعداد روز
+            }
+            if ((FARSI_DATE.Substring(5, 2) == "12") && (FARSI_DATE.Substring(8, 2) == "30") && (KABISEH_F(FARSI_DATE.Substring(0, 4)) == false))
+            {
+                return false; //کنترل تعداد روز
+            }
+            if ((FARSI_DATE.Substring(0, 2) != "12") && (FARSI_DATE.Substring(0, 2) != "13") && (FARSI_DATE.Substring(0, 2) != "14") && (FARSI_DATE.Substring(0, 2) != "15") && (FARSI_DATE.Substring(0, 2) != "16"))
+            {
+                return false; //محدوده تاريخ شمسي
+            }
+            return true;
+        }
+        public bool KABISEH_F(string YEAR)
+        {
+            int J;
+            J = 1003;
+            while (J <= 9999)
+            {
+                if (YEAR == J.ToString())
+                {
+                    return true;
+                }
+                J = J + 4;
+            }
+            return false;
+        }
+        public bool KABISEH_L(string YEAR)
+        {
+            int J;
+            J = 1000;
+            while (J <= 9999)
+            {
+                if (YEAR == J.ToString())
+                {
+                    return true;
+                }
+                J = J + 4;
+            }
+            return false;
+        }
+        public string LATIN_To_FARSIDATE(System.DateTime Miladi_Date)
+        {
+            int[] Shamsi_M = new int[13];    //Array of Shamsi Months
+            int[] Dif_M_Sh = new int[13];  //Array of Difference between Shamsi Months & Miladi Months
+            int Y;              //Miladi year
+            int Ys;              //Shamsi year
+            int M;             //Miladi Month
+            int Ms;             //Shamsi Month
+            int D;              //Miladi Day
+            int Ds;              //Shamsi Day
+            int E, F, A;
+            bool FLAG;
+
+            Shamsi_M[1] = 31;
+            Shamsi_M[2] = 31;
+            Shamsi_M[3] = 31;
+            Shamsi_M[4] = 31;
+            Shamsi_M[5] = 31;
+            Shamsi_M[6] = 31;
+            Shamsi_M[7] = 30;
+            Shamsi_M[8] = 30;
+            Shamsi_M[9] = 30;
+            Shamsi_M[10] = 30;
+            Shamsi_M[11] = 30;
+            Shamsi_M[12] = 29;
+
+            Dif_M_Sh[1] = 20;
+            Dif_M_Sh[2] = 19;
+            Dif_M_Sh[3] = 20;
+            Dif_M_Sh[4] = 20;
+            Dif_M_Sh[5] = 21;
+            Dif_M_Sh[6] = 21;
+            Dif_M_Sh[7] = 22;
+            Dif_M_Sh[8] = 22;
+            Dif_M_Sh[9] = 22;
+            Dif_M_Sh[10] = 22;
+            Dif_M_Sh[11] = 21;
+            Dif_M_Sh[12] = 21;
+            FLAG = false;
+            Y = Miladi_Date.Year;
+            M = Miladi_Date.Month;
+            D = Miladi_Date.Day;
+            //------------------------------------------------------------------------
+            if (KABISEH_L(Y.ToString()) == true && M == 12 && D == 31)
+            {
+                Miladi_Date = Miladi_Date.AddDays(1);
+                Y = Miladi_Date.Year;
+                M = Miladi_Date.Month;
+                D = Miladi_Date.Day;
+                goto L;
+            }
+
+            if (KABISEH_L(Y.ToString()) == true && M >= 3)
+            {
+                Miladi_Date = Miladi_Date.AddDays(1);
+                Y = Miladi_Date.Year;
+                M = Miladi_Date.Month;
+                D = Miladi_Date.Day;
+            }
+
+            if (KABISEH_L(Y.ToString()) == false && KABISEH_L((Y - 1).ToString()) == true && M == 2 && D == 28)
+            {
+                FLAG = true;
+                goto L;
+            }
+            if (KABISEH_L(Y.ToString()) == false && KABISEH_L((Y - 1).ToString()) == false && M == 2 && D == 28)
+            {
+                FLAG = false;
+                goto L;
+            }
+            if (KABISEH_L(Y.ToString()) == false && KABISEH_L((Y - 1).ToString()) == true && M < 3)
+            {
+                Miladi_Date = Miladi_Date.AddDays(1);
+                Y = Miladi_Date.Year;
+                M = Miladi_Date.Month;
+                D = Miladi_Date.Day;
+            }
+        //--------------------------------------------------------------------
+        L:
+            E = Y % 4;      //e is a result of criteria for kabise year example=2000/4...12
+            F = Y - 1;
+            F = F % 4;        //f is a result of criteria for kabise year example=2001/1...3 
+            Ms = M - 2;
+
+            if (Ms <= 0)
+            {
+                Ms = Ms + 12;
+                A = 0;       //a show the amount of adding year
+            }
+            else
+                A = 1;
+            Ys = Y - 622 + A;
+            if (E == 0 && M >= 3 && D >= 21)
+            //Our equal months in kabise (Miladi & Shamsi)
+            {
+                Shamsi_M[12] = 30;
+                goto llll;
+            }
+            if (F == 0 && M <= 3)
+            {
+                if (M == 3 && D > 20)
+                    Shamsi_M[12] = 29;   //if is 2001/3/1...20 is kabise else 2001/3/20..30 is Normal
+                else
+                    Shamsi_M[12] = 30;
+            }
+        llll:
+            if (FLAG == true)
+                Ds = (D - Dif_M_Sh[M]) + 1;
+            else
+                Ds = D - Dif_M_Sh[M];
+
+            if (Ds <= 0)
+            {
+                Ms = Ms - 1;
+                if (Ms <= 0)
+                {
+                    Ys = Ys - 1;
+                    Ms = Ms + 12;
+                }
+                Ds = Ds + Shamsi_M[Ms];
+            }
+
+            string Yss = Ys.ToString();
+            string Mss = Ms.ToString();
+            string Dss = Ds.ToString();
+
+            if (E == 0 && M >= 3 && D >= 21)
+            {
+                if (Mss.Length == 1 && Dss.Length == 1)
+                    return Yss + "/0" + Mss + "/0" + Dss;
+                else if (Mss.Length == 1 && Dss.Length == 2)
+                    return Yss + "/0" + Mss + "/" + Dss;
+                else if (Mss.Length == 2 && Dss.Length == 1)
+                    return Yss + "/" + Mss + "/0" + Dss;
+                else
+                    return Yss + "/" + Mss + "/" + Dss;
+            }
+
+            if (F == 0 && M <= 3)
+            {
+                if (M == 3 && D > 20)
+                {
+                    if (Mss.Length == 1 && Dss.Length == 1)
+                        return Yss + "/0" + Mss + "/0" + Dss;
+                    else if (Mss.Length == 1 && Dss.Length == 2)
+                        return Yss + "/0" + Mss + "/" + Dss;
+                    else if (Mss.Length == 2 && Dss.Length == 1)
+                        return Yss + "/" + Mss + "/0" + Dss;
+                    else
+                        return Yss + "/" + Mss + "/" + Dss;
+                }
+                else
+                {
+                    if (Mss.Length == 1 && Dss.Length == 1)
+                        return Yss + "/0" + Mss + "/0" + Dss;
+                    else if (Mss.Length == 1 && Dss.Length == 2)
+                        return Yss + "/0" + Mss + "/" + Dss;
+                    else if (Mss.Length == 2 && Dss.Length == 1)
+                        return Yss + "/" + Mss + "/0" + Dss;
+                    else
+                        return Yss + "/" + Mss + "/" + Dss;
+                }
+            }
+
+            if (Mss.Length == 1 && Dss.Length == 1)
+                return Yss + "/0" + Mss + "/0" + Dss;
+            else if (Mss.Length == 1 && Dss.Length == 2)
+                return Yss + "/0" + Mss + "/" + Dss;
+            else if (Mss.Length == 2 && Dss.Length == 1)
+                return Yss + "/" + Mss + "/0" + Dss;
+            else
+                return Yss + "/" + Mss + "/" + Dss;
+
+        }
+        public string separate(string AMOUNT)
+        {
+            AMOUNT = AMOUNT.Replace(",", "");
+            string floatpoint = "";
+            int index = -1;
+            int len = -1;
+            if (AMOUNT.IndexOf(".") != -1)
+            {
+                index = AMOUNT.IndexOf(".");
+                len = AMOUNT.Length;
+                floatpoint = AMOUNT.Substring(index, len - index);
+            }
+            if (index != -1)
+                AMOUNT = AMOUNT.Substring(0, index);
+            bool sign = false;
+            if (AMOUNT.Substring(0, 1) == "-")
+            {
+                AMOUNT = AMOUNT.Substring(1, AMOUNT.Length - 1);
+                sign = true;
+            }
+            string a = "";
+            for (int i = 0; AMOUNT.Length > 3; i++)
+            {
+                a = "," + AMOUNT.Substring(AMOUNT.Length - 3, 3) + a;
+                AMOUNT = AMOUNT.Substring(0, AMOUNT.Length - 3);
+            }
+            a = AMOUNT + a;
+            if (sign)
+                a = "-" + a;
+            return (a + floatpoint);
+        }       
+        public void FillgrdListDmgBimeshode(ListDmgBimeshodeInfo[] ListDmgBimeshodeInfo2)
+        {                       
+            int startRecord = grdListDmgBimeshode.CurrentPageIndex * grdListDmgBimeshode.PageSize;
+            int endrecord = ((grdListDmgBimeshode.CurrentPageIndex + 1) * grdListDmgBimeshode.PageSize) + 1;
+            int totalRecord = 0;
+            totalRecord = ListDmgBimeshodeInfo2.Length;            
+            grdListDmgBimeshode.VirtualItemCount = totalRecord;
+            grdListDmgBimeshode.DataSource = ListDmgBimeshodeInfo2;
+            try
+            {               
+                grdListDmgBimeshode.DataBind();
+            }
+            catch (Exception)
+            {
+                grdListDmgBimeshode.CurrentPageIndex = 0;
+                grdListDmgBimeshode.DataBind();
+            }
+            if (grdListDmgBimeshode == null || (grdListDmgBimeshode != null && ListDmgBimeshodeInfo2.Length == 0))
+            {               
+                OutputLabel.Text = "اطلاعات موجود نمی باشد.";
+                return;
+            }
+            else
+            {               
+            }
+        }          
+    }
+}

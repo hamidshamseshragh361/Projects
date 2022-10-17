@@ -1,0 +1,16 @@
+with  CTE (IssueCode,InsNo,GroupRecordNumber)
+as
+(
+select IssueCode, InsNo,row_number() over (partition by IssueCode,InsNo order by IssueCode, InsNo) 
+from policy
+)
+delete from CTE where GroupRecordNumber>1
+
+with CTE as 
+(
+select *,row_number() over (partition by Fname,Lname,Fatherame,BirthDate,IdNo order by Fname,Lname,Fatherame,BirthDate,IdNo) as GroupRecordNumber
+from Personel
+)
+delete from CTE where GroupRecordNumber>1 
+
+

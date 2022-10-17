@@ -1,0 +1,19 @@
+brep.bimehasia.net\sql11c
+asia-bi
+Asia@1234567
+
+ReportServer1 DataBase
+
+ALTER PROCEDURE [dbo].[GetCatalogExtendedContentData]
+    @CatalogItemID UNIQUEIDENTIFIER,
+    @ContentType VARCHAR(50)
+AS
+BEGIN
+    SELECT
+        DATALENGTH([Content]) AS ContentLength,
+        [Content]
+    FROM
+        --[CatalogItemExtendedContent] WITH (NOWAIT) -- DevNote: Using NOWAIT here because for large models the row might be locked for long durations. Fail fast and let the client retry.
+		  [CatalogItemExtendedContent] WITH (READPAST) -- Pre-May 2020 code 
+    WHERE
+        [ItemID] = @CatalogItemID AND ContentType = @ContentType

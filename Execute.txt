@@ -1,0 +1,27 @@
+﻿SqlConnection objCon = new SqlConnection(ConfigurationSettings.AppSettings["ConnectionString"].ToString());
+            objCon.Open();
+            try
+            {
+                using (SqlCommand cmd = new SqlCommand())
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.CommandText = "EXEC_SQL";
+                    cmd.Connection = objCon;
+                    string SqlStr, MAX_ROW = "";
+                    try { cmd.Parameters.RemoveAt(0); }
+                    catch (Exception ex) { }
+
+                    SqlStr = "INSERT INTO I_Users_Managements(FK_Managements,FK_Users) VALUES(" + cmbFK_Managements.SelectedValue + "," + cmbFK_Users.SelectedValue + ")";
+                    cmd.Parameters.Add(new SqlParameter("@SqlStr", SqlStr));
+                    cmd.ExecuteNonQuery();
+                    ClearPage();
+                    FillI_Users_ManagementsList(0);
+                    Fill_Users();
+                }
+                ClearPage();
+                ErrLabel.Text = "ايجاد رکورد با موفقيت انجام شد.";                   
+            }
+            catch (Exception ex)
+            {
+                ErrLabel.Text = "خطا در ايجاد رکورد.";
+            }

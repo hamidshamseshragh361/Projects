@@ -1,0 +1,392 @@
+﻿<SiteMap IntroducedVersion="7.0.0.0">
+  <Area Id="Workplace" ResourceId="Area_Workplace" ShowGroups="true" Icon="/_imgs/workplace_24x24.gif" DescriptionResourceId="Workplace_Description">
+    <Group Id="MyWork" ResourceId="Group_MyWork" DescriptionResourceId="My_Work_Description">
+      <SubArea Id="nav_dashboards" ResourceId="Homepage_Dashboards" Icon="/_imgs/area/18_home.gif" DescriptionResourceId="Dashboards_Description" Url="/workplace/home_dashboards.aspx" GetStartedPanePath="Dashboards_Web_User_Visor.html" GetStartedPanePathAdmin="Dashboards_Web_Admin_Visor.html" GetStartedPanePathOutlook="Dashboards_Outlook_User_Visor.html" GetStartedPanePathAdminOutlook="Dashboards_Outlook_Admin_Visor.html" />
+      <SubArea Id="nav_activities" Entity="activitypointer" DescriptionResourceId="Activities_SubArea_Description" Url="/_root/homepage.aspx?etc=4200" GetStartedPanePath="Activities_Web_User_Visor.html" GetStartedPanePathAdmin="Activities_Web_Admin_Visor.html" GetStartedPanePathOutlook="Activities_Outlook_User_Visor.html" GetStartedPanePathAdminOutlook="Activities_Outlook_Admin_Visor.html" />
+      <SubArea Id="nav_calendar" Icon="/_imgs/area/18_calendar.gif" ResourceId="Homepage_Calendar" Url="/workplace/home_calendar.aspx" Client="Web">
+        <Privilege Entity="activitypointer" Privilege="Read" />
+      </SubArea>
+      <SubArea Id="nav_import" Icon="/_imgs/area/18_import.gif" Entity="importfile" ResourceId="Homepage_Import" DescriptionResourceId="Imports_Description" AvailableOffline="false" GetStartedPanePath="Imports_Web_User_Visor.html" GetStartedPanePathAdmin="Imports_Web_Admin_Visor.html" GetStartedPanePathOutlook="Imports_Outlook_User_Visor.html" GetStartedPanePathAdminOutlook="Imports_Outlook_Admin_Visor.html">
+        <Privilege Entity="import" Privilege="Read" />
+        <Privilege Entity="base_showsetting" Privilege="Read" />
+      </SubArea>
+      <SubArea Id="nav_duplicatedetectionjobs" Icon="/_imgs/data_management.gif" ResourceId="Homepage_DuplicateDetectionJobs" Url="/Tools/DuplicateDetection/SystemWideDuplicateDetection/home_duplicatedetectionjobs.aspx" DescriptionResourceId="DuplicateDetectionJobs_Description" AvailableOffline="false" GetStartedPanePath="Dup-Det-Jobs_Web_User_Visor.html" GetStartedPanePathAdmin="Dup-Det-Jobs_Web_Admin_Visor.html" GetStartedPanePathOutlook="Dup-Det-Jobs_Outlook_User_Visor.html" GetStartedPanePathAdminOutlook="Dup-Det-Jobs_Outlook_Admin_Visor.html">
+        <Privilege Entity="asyncoperation" Privilege="Read" />
+        <Privilege Entity="base_showsetting" Privilege="Read" />
+      </SubArea>
+      <SubArea Id="nav_queues" Icon="/_imgs/ico_18_2020.gif" Url="/_root/homepage.aspx?etc=2029" ResourceId="Homepage_Queues" DescriptionResourceId="Queues_SubArea_Description" GetStartedPanePath="Queues_Web_User_Visor.html" GetStartedPanePathAdmin="Queues_Web_Admin_Visor.html" GetStartedPanePathOutlook="Queues_Outlook_User_Visor.html" GetStartedPanePathAdminOutlook="Queues_Outlook_Admin_Visor.html">
+        <Privilege Entity="queue" Privilege="Read" />
+      </SubArea>
+      <SubArea Id="nav_answers" Entity="kbarticle" DescriptionResourceId="Article_SubArea_Description" GetStartedPanePath="KB_Web_User_Visor.html" GetStartedPanePathAdmin="KB_Web_Admin_Visor.html" GetStartedPanePathOutlook="KB_Outlook_User_Visor.html" GetStartedPanePathAdminOutlook="KB_Outlook_Admin_Visor.html">
+        <Privilege Entity="kbarticle" Privilege="Read" />
+        <Privilege Entity="base_showsetting" Privilege="Read" />
+      </SubArea>
+      <SubArea Id="nav_reports" Entity="report" DescriptionResourceId="Reports_Description">
+        <Privilege Entity="report" Privilege="Read" />
+      </SubArea>
+      <SubArea Id="nav_news" Entity="businessunitnewsarticle" Url="/home/homepage/home_news.aspx" DescriptionResourceId="News_SubArea_Description">
+        <Privilege Entity="base_showsetting" Privilege="Read" />
+      </SubArea>
+    </Group>
+    <Group Id="Customers" ResourceId="Group_Customers" DescriptionResourceId="Customers_Description">
+      <SubArea Id="nav_accts" Entity="account" DescriptionResourceId="Account_SubArea_Description" GetStartedPanePath="Accounts_Web_User_Visor.html" GetStartedPanePathAdmin="Accounts_Web_Admin_Visor.html" GetStartedPanePathOutlook="Accounts_Outlook_User_Visor.html" GetStartedPanePathAdminOutlook="Accounts_Outlook_Admin_Visor.html" />
+      <SubArea Id="nav_conts" Entity="contact" DescriptionResourceId="Contact_SubArea_Description" GetStartedPanePath="Contacts_Web_User_Visor.html" GetStartedPanePathAdmin="Contacts_Web_Admin_Visor.html" GetStartedPanePathOutlook="Contacts_Outlook_User_Visor.html" GetStartedPanePathAdminOutlook="Contacts_Outlook_Admin_Visor.html" />
+    </Group>
+    <Group Id="SFA" ResourceId="Area_Sales" IsProfile="true" DescriptionResourceId="Sales_Description">
+      <SubArea Id="nav_lists1" Entity="list" DescriptionResourceId="MarketingList_SubArea_Description" GetStartedPanePath="Marketing-Lists_Web_User_Visor.html" GetStartedPanePathAdmin="Marketing-Lists_Web_Admin_Visor.html" GetStartedPanePathOutlook="Marketing-Lists_Outlook_User_Visor.html" GetStartedPanePathAdminOutlook="Marketing-Lists_Outlook_Admin_Visor.html">
+        <Privilege Entity="base_showsetting" Privilege="Read" />
+      </SubArea>
+      <SubArea Id="nav_leads" Entity="lead" DescriptionResourceId="Lead_SubArea_Description" GetStartedPanePath="Leads_Web_User_Visor.html" GetStartedPanePathAdmin="Leads_Web_Admin_Visor.html" GetStartedPanePathOutlook="Leads_Outlook_User_Visor.html" GetStartedPanePathAdminOutlook="Leads_Outlook_Admin_Visor.html" />
+      <SubArea Id="nav_oppts" Entity="opportunity" DescriptionResourceId="Opportunity_SubArea_Description" GetStartedPanePath="Opportunities_Web_User_Visor.html" GetStartedPanePathAdmin="Opportunities_Web_Admin_Visor.html" GetStartedPanePathOutlook="Opportunities_Outlook_User_Visor.html" GetStartedPanePathAdminOutlook="Opportunities_Outlook_Admin_Visor.html">
+        <Privilege Entity="base_showsetting" Privilege="Read" />
+      </SubArea>
+      <SubArea Id="nav_quotes" Entity="quote" DescriptionResourceId="Quote_SubArea_Description" GetStartedPanePath="Quotes_Web_User_Visor.html" GetStartedPanePathAdmin="Quotes_Web_Admin_Visor.html" GetStartedPanePathOutlook="Quotes_Outlook_User_Visor.html" GetStartedPanePathAdminOutlook="Quotes_Outlook_Admin_Visor.html">
+        <Privilege Entity="base_showsetting" Privilege="Read" />
+      </SubArea>
+      <SubArea Id="nav_orders" Entity="salesorder" DescriptionResourceId="Orders_SubArea_Description" GetStartedPanePath="Orders_Web_User_Visor.html" GetStartedPanePathAdmin="Orders_Web_Admin_Visor.html" GetStartedPanePathOutlook="Orders_Outlook_User_Visor.html" GetStartedPanePathAdminOutlook="Orders_Outlook_Admin_Visor.html">
+        <Privilege Entity="base_showsetting" Privilege="Read" />
+      </SubArea>
+      <SubArea Id="nav_invoices" Entity="invoice" DescriptionResourceId="Invoice_SubArea_Description" GetStartedPanePath="Invoices_Web_User_Visor.html" GetStartedPanePathAdmin="Invoices_Web_Admin_Visor.html" GetStartedPanePathOutlook="Invoices_Outlook_User_Visor.html" GetStartedPanePathAdminOutlook="Invoices_Outlook_Admin_Visor.html">
+        <Privilege Entity="base_showsetting" Privilege="Read" />
+      </SubArea>
+    </Group>
+    <Group Id="MA" ResourceId="Area_Marketing" IsProfile="true" DescriptionResourceId="Marketing_Description">
+      <SubArea Id="nav_lists" Entity="list" DescriptionResourceId="MarketingList_SubArea_Description" GetStartedPanePath="Marketing-Lists_Web_User_Visor.html" GetStartedPanePathAdmin="Marketing-Lists_Web_Admin_Visor.html" GetStartedPanePathOutlook="Marketing-Lists_Outlook_User_Visor.html" GetStartedPanePathAdminOutlook="Marketing-Lists_Outlook_Admin_Visor.html">
+        <Privilege Entity="base_showsetting" Privilege="Read" />
+      </SubArea>
+      <SubArea Id="nav_campaigns" Entity="campaign" DescriptionResourceId="Campaign_SubArea_Description" GetStartedPanePath="Campaigns_Web_User_Visor.html" GetStartedPanePathAdmin="Campaigns_Web_Admin_Visor.html" GetStartedPanePathOutlook="Campaigns_Outlook_User_Visor.html" GetStartedPanePathAdminOutlook="Campaigns_Outlook_Admin_Visor.html">
+        <Privilege Entity="base_showsetting" Privilege="Read" />
+      </SubArea>
+      <SubArea Id="nav_minicamps" Entity="bulkoperation" DescriptionResourceId="Quick_Campaign_Description" Icon="/_imgs/ico_18_minicamps.gif" OutlookShortcutIcon="/_imgs/olk_4400.ico" GetStartedPanePath="Quick-Campaigns_Web_User_Visor.html" GetStartedPanePathAdmin="Quick-Campaigns_Web_Admin_Visor.html" GetStartedPanePathOutlook="Quick-Campaigns_Outlook_User_Visor.html" GetStartedPanePathAdminOutlook="Quick-Campaigns_Outlook_Admin_Visor.html">
+        <Privilege Privilege="AllowQuickCampaign" />
+        <Privilege Entity="base_showsetting" Privilege="Read" />
+      </SubArea>
+    </Group>
+    <Group Id="CS" ResourceId="Area_Service" IsProfile="true" DescriptionResourceId="Customer_Service_Description">
+      <SubArea Id="nav_cases" Entity="incident" DescriptionResourceId="Cases_SubArea_Description" GetStartedPanePath="Cases_Web_User_Visor.html" GetStartedPanePathAdmin="Cases_Web_Admin_Visor.html" GetStartedPanePathOutlook="Cases_Outlook_User_Visor.html" GetStartedPanePathAdminOutlook="Cases_Outlook_Admin_Visor.html" />
+      <SubArea Id="nav_managekb" Entity="kbarticle" DescriptionResourceId="KBManager_SubArea_Description" Icon="/_imgs/ico_18_126.gif" Url="/_root/homepage.aspx?etc=127" AvailableOffline="false">
+        <Privilege Entity="kbarticle" Privilege="Read,Write,Create" />
+        <Privilege Entity="base_showsetting" Privilege="Read" />
+      </SubArea>
+      <SubArea Id="nav_contracts" Entity="contract" DescriptionResourceId="Contract_SubArea_Description" GetStartedPanePath="Contracts_Web_User_Visor.html" GetStartedPanePathAdmin="Contracts_Web_Admin_Visor.html" GetStartedPanePathOutlook="Contracts_Outlook_User_Visor.html" GetStartedPanePathAdminOutlook="Contracts_Outlook_Admin_Visor.html">
+        <Privilege Entity="base_showsetting" Privilege="Read" />
+      </SubArea>
+    </Group>
+    <Group Id="SM" ResourceId="Area_Scheduling" IsProfile="true" DescriptionResourceId="Scheduling_Group_Description">
+      <SubArea Id="nav_apptbook" ResourceId="Homepage_AppointmentBook" DescriptionResourceId="AppointmentBook_SubArea_Description" Icon="/_imgs/ico_18_servicecal.gif" Url="/sm/home_apptbook.aspx" AvailableOffline="false">
+        <Privilege Entity="activitypointer" Privilege="Read" />
+        <Privilege Entity="service" Privilege="Read" />
+        <Privilege Entity="base_showsetting" Privilege="Read" />
+      </SubArea>
+    </Group>
+  </Area>
+  <Area Id="SFA" ResourceId="Area_Sales" Icon="/_imgs/sales_24x24.gif" DescriptionResourceId="Sales_Description">
+    <Group Id="SFA">
+      <SubArea Id="nav_leads" DescriptionResourceId="Lead_SubArea_Description" Entity="lead" GetStartedPanePath="Leads_Web_User_Visor.html" GetStartedPanePathAdmin="Leads_Web_Admin_Visor.html" GetStartedPanePathOutlook="Leads_Outlook_User_Visor.html" GetStartedPanePathAdminOutlook="Leads_Outlook_Admin_Visor.html" IntroducedVersion="7.0.0.0" />
+      <SubArea Id="nav_oppts" DescriptionResourceId="Opportunity_SubArea_Description" Entity="opportunity" GetStartedPanePath="Opportunities_Web_User_Visor.html" GetStartedPanePathAdmin="Opportunities_Web_Admin_Visor.html" GetStartedPanePathOutlook="Opportunities_Outlook_User_Visor.html" GetStartedPanePathAdminOutlook="Opportunities_Outlook_Admin_Visor.html" IntroducedVersion="7.0.0.0">
+        <Privilege Entity="base_showsetting" Privilege="Read" />
+      </SubArea>
+      <SubArea Id="nav_accts" Entity="account" DescriptionResourceId="Account_SubArea_Description" GetStartedPanePath="Accounts_Web_User_Visor.html" GetStartedPanePathAdmin="Accounts_Web_Admin_Visor.html" GetStartedPanePathOutlook="Accounts_Outlook_User_Visor.html" GetStartedPanePathAdminOutlook="Accounts_Outlook_Admin_Visor.html" />
+      <SubArea Id="nav_conts" Entity="contact" DescriptionResourceId="Contact_SubArea_Description" GetStartedPanePath="Contacts_Web_User_Visor.html" GetStartedPanePathAdmin="Contacts_Web_Admin_Visor.html" GetStartedPanePathOutlook="Contacts_Outlook_User_Visor.html" GetStartedPanePathAdminOutlook="Contacts_Outlook_Admin_Visor.html" />
+      <SubArea Id="nav_lists" Entity="list" DescriptionResourceId="MarketingList_SubArea_Description" GetStartedPanePath="Marketing-Lists_Web_User_Visor.html" GetStartedPanePathAdmin="Marketing-Lists_Web_Admin_Visor.html" GetStartedPanePathOutlook="Marketing-Lists_Outlook_User_Visor.html" GetStartedPanePathAdminOutlook="Marketing-Lists_Outlook_Admin_Visor.html">
+        <Privilege Entity="base_showsetting" Privilege="Read" />
+      </SubArea>
+      <SubArea Id="nav_comps" Entity="competitor" DescriptionResourceId="Competitor_SubArea_Description">
+        <Privilege Entity="base_showsetting" Privilege="Read" />
+      </SubArea>
+      <SubArea Id="nav_products" Entity="product" DescriptionResourceId="Product_SubArea_Description" GetStartedPanePath="Products_Web_User_Visor.html" GetStartedPanePathAdmin="Products_Web_Admin_Visor.html" GetStartedPanePathOutlook="Products_Outlook_User_Visor.html" GetStartedPanePathAdminOutlook="Products_Outlook_Admin_Visor.html">
+        <Privilege Entity="base_showsetting" Privilege="Read" />
+      </SubArea>
+      <SubArea Id="nav_saleslit" Entity="salesliterature" DescriptionResourceId="SalesLit_SubArea_Description">
+        <Privilege Entity="base_showsetting" Privilege="Read" />
+      </SubArea>
+      <SubArea Id="nav_quotes" Entity="quote" DescriptionResourceId="Quote_SubArea_Description" GetStartedPanePath="Quotes_Web_User_Visor.html" GetStartedPanePathAdmin="Quotes_Web_Admin_Visor.html" GetStartedPanePathOutlook="Quotes_Outlook_User_Visor.html" GetStartedPanePathAdminOutlook="Quotes_Outlook_Admin_Visor.html">
+        <Privilege Entity="base_showsetting" Privilege="Read" />
+      </SubArea>
+      <SubArea Id="nav_orders" Entity="salesorder" DescriptionResourceId="Orders_SubArea_Description" GetStartedPanePath="Orders_Web_User_Visor.html" GetStartedPanePathAdmin="Orders_Web_Admin_Visor.html" GetStartedPanePathOutlook="Orders_Outlook_User_Visor.html" GetStartedPanePathAdminOutlook="Orders_Outlook_Admin_Visor.html">
+        <Privilege Entity="base_showsetting" Privilege="Read" />
+      </SubArea>
+      <SubArea Id="nav_invoices" Entity="invoice" DescriptionResourceId="Invoice_SubArea_Description" GetStartedPanePath="Invoices_Web_User_Visor.html" GetStartedPanePathAdmin="Invoices_Web_Admin_Visor.html" GetStartedPanePathOutlook="Invoices_Outlook_User_Visor.html" GetStartedPanePathAdminOutlook="Invoices_Outlook_Admin_Visor.html">
+        <Privilege Entity="base_showsetting" Privilege="Read" />
+      </SubArea>
+      <SubArea Id="nav_minicamps" Entity="bulkoperation" DescriptionResourceId="Quick_Campaign_Description" Icon="/_imgs/ico_18_minicamps.gif" GetStartedPanePath="Quick-Campaigns_Web_User_Visor.html" GetStartedPanePathAdmin="Quick-Campaigns_Web_Admin_Visor.html" GetStartedPanePathOutlook="Quick-Campaigns_Outlook_User_Visor.html" GetStartedPanePathAdminOutlook="Quick-Campaigns_Outlook_Admin_Visor.html">
+        <Privilege Privilege="AllowQuickCampaign" />
+        <Privilege Entity="base_showsetting" Privilege="Read" />
+      </SubArea>
+      <SubArea Id="nav_goals" Entity="goal" DescriptionResourceId="Goals_SubArea_Description" Icon="/_imgs/ico_18_9600.png">
+        <Privilege Entity="base_showsetting" Privilege="Read" />
+      </SubArea>
+      <SubArea Id="nav_metric" Entity="metric" DescriptionResourceId="Metrics_SubArea_Description">
+        <Privilege Entity="base_showsetting" Privilege="Read" />
+      </SubArea>
+      <SubArea Id="nav_goalrollupqueries" Entity="goalrollupquery" DescriptionResourceId="GoalQueries_SubArea_Description" Icon="/_imgs/ico_18_9602.png">
+        <Privilege Entity="base_showsetting" Privilege="Read" />
+      </SubArea>
+    </Group>
+  </Area>
+  <Area Id="MA" ResourceId="Area_Marketing" Icon="/_imgs/marketing_24x24.gif" DescriptionResourceId="Marketing_Description">
+    <Group Id="MA">
+      <SubArea Id="nav_leads" Entity="lead" DescriptionResourceId="Lead_SubArea_Description" GetStartedPanePath="Leads_Web_User_Visor.html" GetStartedPanePathAdmin="Leads_Web_Admin_Visor.html" GetStartedPanePathOutlook="Leads_Outlook_User_Visor.html" GetStartedPanePathAdminOutlook="Leads_Outlook_Admin_Visor.html" IntroducedVersion="7.0.0.0" />
+      <SubArea Id="nav_accts" Entity="account" DescriptionResourceId="Account_SubArea_Description" GetStartedPanePath="Accounts_Web_User_Visor.html" GetStartedPanePathAdmin="Accounts_Web_Admin_Visor.html" GetStartedPanePathOutlook="Accounts_Outlook_User_Visor.html" GetStartedPanePathAdminOutlook="Accounts_Outlook_Admin_Visor.html" />
+      <SubArea Id="nav_conts" Entity="contact" DescriptionResourceId="Contact_SubArea_Description" GetStartedPanePath="Contacts_Web_User_Visor.html" GetStartedPanePathAdmin="Contacts_Web_Admin_Visor.html" GetStartedPanePathOutlook="Contacts_Outlook_User_Visor.html" GetStartedPanePathAdminOutlook="Contacts_Outlook_Admin_Visor.html" />
+      <SubArea Id="nav_lists" Entity="list" DescriptionResourceId="MarketingList_SubArea_Description" GetStartedPanePath="Marketing-Lists_Web_User_Visor.html" GetStartedPanePathAdmin="Marketing-Lists_Web_Admin_Visor.html" GetStartedPanePathOutlook="Marketing-Lists_Outlook_User_Visor.html" GetStartedPanePathAdminOutlook="Marketing-Lists_Outlook_Admin_Visor.html">
+        <Privilege Entity="base_showsetting" Privilege="Read" />
+      </SubArea>
+      <SubArea Id="nav_campaigns" Entity="campaign" DescriptionResourceId="Campaign_SubArea_Description" GetStartedPanePath="Campaigns_Web_User_Visor.html" GetStartedPanePathAdmin="Campaigns_Web_Admin_Visor.html" GetStartedPanePathOutlook="Campaigns_Outlook_User_Visor.html" GetStartedPanePathAdminOutlook="Campaigns_Outlook_Admin_Visor.html">
+        <Privilege Entity="base_showsetting" Privilege="Read" />
+      </SubArea>
+      <SubArea Id="nav_products" Entity="product" DescriptionResourceId="Product_SubArea_Description" GetStartedPanePath="Products_Web_User_Visor.html" GetStartedPanePathAdmin="Products_Web_Admin_Visor.html" GetStartedPanePathOutlook="Products_Outlook_User_Visor.html" GetStartedPanePathAdminOutlook="Products_Outlook_Admin_Visor.html">
+        <Privilege Entity="base_showsetting" Privilege="Read" />
+      </SubArea>
+      <SubArea Id="nav_saleslit" Entity="salesliterature" DescriptionResourceId="SalesLit_SubArea_Description">
+        <Privilege Entity="base_showsetting" Privilege="Read" />
+      </SubArea>
+      <SubArea Id="nav_minicamps" Entity="bulkoperation" DescriptionResourceId="Quick_Campaign_Description" Icon="/_imgs/ico_18_minicamps.gif" GetStartedPanePath="Quick-Campaigns_Web_User_Visor.html" GetStartedPanePathAdmin="Quick-Campaigns_Web_Admin_Visor.html" GetStartedPanePathOutlook="Quick-Campaigns_Outlook_User_Visor.html" GetStartedPanePathAdminOutlook="Quick-Campaigns_Outlook_Admin_Visor.html">
+        <Privilege Privilege="AllowQuickCampaign" />
+        <Privilege Entity="base_showsetting" Privilege="Read" />
+      </SubArea>
+    </Group>
+  </Area>
+  <Area Id="CS" ResourceId="Area_Service" Icon="/_imgs/services_24x24.gif" DescriptionResourceId="Customer_Service_Description">
+    <Group Id="CS">
+      <SubArea Id="nav_cases" DescriptionResourceId="Cases_SubArea_Description" Entity="incident" GetStartedPanePath="Cases_Web_User_Visor.html" GetStartedPanePathAdmin="Cases_Web_Admin_Visor.html" GetStartedPanePathOutlook="Cases_Outlook_User_Visor.html" GetStartedPanePathAdminOutlook="Cases_Outlook_Admin_Visor.html" IntroducedVersion="7.0.0.0" />
+      <SubArea Id="nav_accts" Entity="account" DescriptionResourceId="Account_SubArea_Description" GetStartedPanePath="Accounts_Web_User_Visor.html" GetStartedPanePathAdmin="Accounts_Web_Admin_Visor.html" GetStartedPanePathOutlook="Accounts_Outlook_User_Visor.html" GetStartedPanePathAdminOutlook="Accounts_Outlook_Admin_Visor.html" />
+      <SubArea Id="nav_contacts" Entity="contact" DescriptionResourceId="Contact_SubArea_Description" GetStartedPanePath="Contacts_Web_User_Visor.html" GetStartedPanePathAdmin="Contacts_Web_Admin_Visor.html" GetStartedPanePathOutlook="Contacts_Outlook_User_Visor.html" GetStartedPanePathAdminOutlook="Contacts_Outlook_Admin_Visor.html" />
+      <SubArea Id="nav_apptbook" ResourceId="Homepage_AppointmentBook" DescriptionResourceId="AppointmentBook_SubArea_Description" Icon="/_imgs/ico_18_servicecal.gif" Url="/sm/home_apptbook.aspx" AvailableOffline="false">
+        <Privilege Entity="activitypointer" Privilege="Read" />
+        <Privilege Entity="service" Privilege="Read" />
+        <Privilege Entity="base_showsetting" Privilege="Read" />
+      </SubArea>
+      <SubArea Id="nav_answers" Entity="kbarticle" DescriptionResourceId="Article_SubArea_Description" GetStartedPanePath="KB_Web_User_Visor.html" GetStartedPanePathAdmin="KB_Web_Admin_Visor.html" GetStartedPanePathOutlook="KB_Outlook_User_Visor.html" GetStartedPanePathAdminOutlook="KB_Outlook_Admin_Visor.html">
+        <Privilege Entity="kbarticle" Privilege="Read,Write,Create" />
+        <Privilege Entity="base_showsetting" Privilege="Read" />
+      </SubArea>
+      <SubArea Id="nav_contracts" Entity="contract" DescriptionResourceId="Contract_SubArea_Description" GetStartedPanePath="Contracts_Web_User_Visor.html" GetStartedPanePathAdmin="Contracts_Web_Admin_Visor.html" GetStartedPanePathOutlook="Contracts_Outlook_User_Visor.html" GetStartedPanePathAdminOutlook="Contracts_Outlook_Admin_Visor.html">
+        <Privilege Entity="base_showsetting" Privilege="Read" />
+      </SubArea>
+      <SubArea Id="nav_products" Entity="product" DescriptionResourceId="Product_SubArea_Description" GetStartedPanePath="Products_Web_User_Visor.html" GetStartedPanePathAdmin="Products_Web_Admin_Visor.html" GetStartedPanePathOutlook="Products_Outlook_User_Visor.html" GetStartedPanePathAdminOutlook="Products_Outlook_Admin_Visor.html">
+        <Privilege Entity="base_showsetting" Privilege="Read" />
+      </SubArea>
+      <SubArea Id="nav_services" Entity="service" DescriptionResourceId="Service_SubArea_Description" GetStartedPanePath="Services_Web_User_Visor.html" GetStartedPanePathAdmin="Services_Web_Admin_Visor.html" GetStartedPanePathOutlook="Services_Outlook_User_Visor.html" GetStartedPanePathAdminOutlook="Services_Outlook_Admin_Visor.html">
+        <Privilege Entity="base_showsetting" Privilege="Read" />
+      </SubArea>
+      <SubArea Id="nav_goals" Entity="goal" DescriptionResourceId="Goals_SubArea_Description" Icon="/_imgs/ico_18_9600.png">
+        <Privilege Entity="base_showsetting" Privilege="Read" />
+      </SubArea>
+      <SubArea Id="nav_metric" Entity="metric" DescriptionResourceId="Metrics_SubArea_Description">
+        <Privilege Entity="base_showsetting" Privilege="Read" />
+      </SubArea>
+      <SubArea Id="nav_goalrollupqueries" Entity="goalrollupquery" DescriptionResourceId="GoalQueries_SubArea_Description" Icon="/_imgs/ico_18_9602.png">
+        <Privilege Entity="base_showsetting" Privilege="Read" />
+      </SubArea>
+    </Group>
+  </Area>
+  <Area Id="Settings" ResourceId="Area_Settings" ShowGroups="true" Icon="/_imgs/settings_24x24.gif" DescriptionResourceId="Settings_Area_Description">
+    <Group Id="Business_Setting" ResourceId="Menu_Label_Business" DescriptionResourceId="Menu_Label_Business" IntroducedVersion="7.0.0.0">
+      <SubArea Id="nav_businessmanagement" ResourceId="Homepage_BusinessManagement" DescriptionResourceId="BizManagement_SubArea_Description" Icon="/_imgs/ico_18_busmanagement.gif" Url="/tools/business/business.aspx" AvailableOffline="false" IntroducedVersion="7.0.0.0">
+        <Privilege Entity="base_showsetting" Privilege="Read" />
+      </SubArea>
+      <SubArea Id="nav_template" ResourceId="Homepage_Template" DescriptionResourceId="Template_SubArea_Description" Icon="/_imgs/ico_18_templates.gif" Url="/tools/templates/templates.aspx" AvailableOffline="false" IntroducedVersion="7.0.0.0">
+        <Privilege Entity="base_showsetting" Privilege="Read" />
+      </SubArea>
+      <SubArea Id="nav_productcatalog" ResourceId="Homepage_ProductCatalog" DescriptionResourceId="ProductCatalog_SubArea_Description" Icon="/_imgs/ico_18_productcatalog.gif" Url="/tools/productcatalog/productcatalog.aspx" AvailableOffline="false" IntroducedVersion="7.0.0.0">
+        <Privilege Entity="product" Privilege="Read" />
+        <Privilege Entity="base_showsetting" Privilege="Read" />
+      </SubArea>
+      <SubArea Id="nav_servicemanagement" ResourceId="Homepage_ServiceManagement" DescriptionResourceId="ServiceManagement_SubArea_Description" Url="/tools/servicemanagement/servicemanagement.aspx" AvailableOffline="false" IntroducedVersion="7.0.0.0">
+        <Privilege Entity="base_showsetting" Privilege="Read" />
+      </SubArea>
+    </Group>
+    <Group Id="System_Setting" ResourceId="Menu_Label_System" DescriptionResourceId="Menu_Label_System">
+      <SubArea Id="nav_administration" ResourceId="Homepage_Administration" DescriptionResourceId="Administration_SubArea_Description" Icon="/_imgs/ico_18_administration.gif" Url="/tools/Admin/admin.aspx" AvailableOffline="false" IntroducedVersion="7.0.0.0">
+        <Privilege Entity="base_showsetting" Privilege="Read" />
+      </SubArea>
+      <SubArea Id="nav_security" ResourceId="AdminSecurity_SubArea_Title" DescriptionResourceId="AdminSecurity_SubArea_Description" Icon="/_imgs/area/Security_32.png" Url="/tools/AdminSecurity/adminsecurity_area.aspx" AvailableOffline="false" IntroducedVersion="7.0.0.0">
+        <Privilege Entity="base_showsetting" Privilege="Read" />
+      </SubArea>
+      <SubArea Id="nav_datamanagement" ResourceId="Homepage_DataManagement" DescriptionResourceId="DataManagement_SubArea_Description" Icon="/_imgs/ico_18_datamanagement.gif" Url="/tools/DataManagement/datamanagement.aspx" AvailableOffline="false" IntroducedVersion="7.0.0.0">
+        <Privilege Entity="base_showsetting" Privilege="Read" />
+      </SubArea>
+      <SubArea Id="nav_systemjobs" ResourceId="Homepage_SystemJobs" DescriptionResourceId="SystemJobs_SubArea_Description" Entity="asyncoperation" Url="/tools/business/home_asyncoperation.aspx" AvailableOffline="false" IntroducedVersion="7.0.0.0">
+        <Privilege Entity="base_showsetting" Privilege="Read" />
+      </SubArea>
+      <SubArea Id="nav_documentmanagement" ResourceId="DocumentManagement.SettingsArea.Heading" DescriptionResourceId="DocumentManagement.SettingsArea.Description" Icon="/_imgs/DocumentManagement_16.png" Url="/tools/documentmanagement/documentmanagement.aspx" AvailableOffline="false" IntroducedVersion="7.0.0.0">
+        <Privilege Entity="sharepointsite" Privilege="Read" />
+        <Privilege Entity="sharepointdocumentlocation" Privilege="Read" />
+        <Privilege Entity="base_showsetting" Privilege="Read" />
+      </SubArea>
+      <SubArea Id="nav_audit" ResourceId="Audit_SubArea_Title" DescriptionResourceId="Audit_SubArea_Description" Icon="/_imgs/area/16_audit.png" Url="/tools/audit/audit_area.aspx" AvailableOffline="false" IntroducedVersion="7.0.0.0">
+        <Privilege Entity="base_showsetting" Privilege="Read" />
+      </SubArea>
+    </Group>
+    <Group Id="Customizations" ResourceId="Homepage_SystemCustomization" DescriptionResourceId="Homepage_SystemCustomization">
+      <SubArea Id="nav_syscust" ResourceId="Menu_Label_Customizations" DescriptionResourceId="Customization_SubArea_Description" Icon="/_imgs/area/18_syscust.gif" Url="/tools/systemcustomization/systemcustomization.aspx" AvailableOffline="false" IntroducedVersion="7.0.0.0">
+        <Privilege Entity="base_showsetting" Privilege="Read" />
+      </SubArea>
+      <SubArea Id="nav_solution" Entity="solution" ResourceId="Web.Tools.Solution.map_xml.aspx_1" AvailableOffline="false" GetStartedPanePath="Solutions_Web_Admin_Visor.html" GetStartedPanePathAdmin="Solutions_Web_Admin_Visor.html" GetStartedPanePathOutlook="Solutions_Outlook_Admin_Visor.html" GetStartedPanePathAdminOutlook="Solutions_Outlook_Admin_Visor.html" DescriptionResourceId="Web.Tools.Solution.map_xml.aspx_2" Url="/tools/Solution/home_solution.aspx?etc=7100" IntroducedVersion="7.0.0.0">
+        <Privilege Entity="solution" Privilege="Read" />
+        <Privilege Entity="base_showsetting" Privilege="Read" />
+      </SubArea>
+      <SubArea Id="nav_marketplace" ResourceId="Homepage_Marketplace" DescriptionResourceId="Marketplace_SubArea_Description" Icon="/_imgs/SystemCustomization/ico_18_marketplace.png" Url="/tools/SystemCustomization/SolutionsMarketplace/SolutionsMarketplace.aspx" Client="Web" CheckExtensionProperty="SolutionsMarketplaceEnabled">
+        <Privilege Entity="base_showsetting" Privilege="Read" />
+      </SubArea>
+    </Group>
+    <Group Id="ProcessCenter" ResourceId="Menu_Label_ProcessCenter" DescriptionResourceId="Menu_Label_ProcessCenter" IntroducedVersion="7.0.0.0">
+      <SubArea Id="nav_workflow" Entity="workflow" DescriptionResourceId="Workflow_SubArea_Description" AvailableOffline="false" GetStartedPanePath="Workflows_Web_User_Visor.html" GetStartedPanePathAdmin="Workflows_Web_Admin_Visor.html" GetStartedPanePathOutlook="Workflows_Outlook_User_Visor.html" GetStartedPanePathAdminOutlook="Workflows_Outlook_Admin_Visor.html" IntroducedVersion="7.0.0.0">
+        <Privilege Entity="base_showsetting" Privilege="Read" />
+      </SubArea>
+    </Group>
+    <Group Id="crmtools_Group">
+      <Titles>
+        <Title LCID="1033" Title="Plugins" />
+        <Title LCID="1036" Title="Plugins" />
+      </Titles>
+      <SubArea Icon="$webresource:ake_/sl/EasyPluginsIcon.png" Id="crmtools_nav_easyplugins" Url="$webresource:ake_/sl/EasyPlugins.html" AvailableOffline="false" PassParams="false">
+        <Titles>
+          <Title LCID="1033" Title="Easy Plugins" />
+          <Title LCID="1036" Title="Easy Plugins" />
+        </Titles>
+        <Privilege Entity="base_showsetting" Privilege="Read" />
+      </SubArea>
+    </Group>
+    <Group Id="Extensions" ResourceId="Group_Extensions">
+      <SubArea Id="base_insuarncebranch" Entity="base_insuarncebranch" />
+      <SubArea Id="base_insurancesubbranch" Entity="base_insurancesubbranch" />
+      <SubArea Id="base_test" Entity="base_test">
+        <Privilege Entity="base_showsetting" Privilege="Read" />
+      </SubArea>
+      <SubArea Id="new_advanceautonumber" Entity="new_advanceautonumber">
+        <Privilege Entity="base_showsetting" Privilege="Read" />
+      </SubArea>
+      <SubArea Id="new_advanceautonumberlicense" Entity="new_advanceautonumberlicense">
+        <Privilege Entity="base_showsetting" Privilege="Read" />
+      </SubArea>
+    </Group>
+    <Group Id="dxtools_Group">
+      <Titles>
+        <Title LCID="1033" Title="Dynamics XRM Tools" />
+      </Titles>
+      <SubArea Id="dxtools_UIShell" Icon="$webresource:dxtools_/images/dxtools18x18.png" Url="$webresource:dxtools_/SL/ShellLoader.htm">
+        <Titles>
+          <Title LCID="1033" Title="Start" />
+        </Titles>
+        <Privilege Entity="base_showsetting" Privilege="Read" />
+      </SubArea>
+    </Group>
+  </Area>
+  <Area Id="HLP" ResourceId="Area_Help" ShowGroups="true" Icon="/_imgs/icn_help16.png" DescriptionResourceId="Help_Area_Description" IntroducedVersion="7.0.0.0">
+    <Group Id="Extensions" ResourceId="Group_Extensions">
+      <SubArea Entity="new_personel" Id="new_personel" Title="مشخصات پرسنلی" AvailableOffline="false" PassParams="false" />
+      <SubArea Id="agent_agencyapplicant" Entity="agent_agencyapplicant" />
+      <SubArea Id="base_job" Entity="base_job" />
+      <SubArea Id="agent_interview" Entity="agent_interview" />
+      <SubArea Id="agent_officevisit" Entity="agent_officevisit" />
+      <SubArea Id="agent_agencyapplicantstatus" Entity="agent_agencyapplicantstatus" />
+      <SubArea Id="agent_surety" Entity="agent_surety" />
+      <SubArea Id="policy_contract" Entity="policy_contract" />
+      <SubArea Id="policy_insurance" Entity="policy_insurance" />
+      <SubArea Id="policy_caritem" Entity="policy_caritem" />
+      <SubArea Id="new_applicantinterview" Entity="new_applicantinterview" />
+      <SubArea Id="agent_portfo" Entity="agent_portfo" />
+      <SubArea Id="agent_licensetest" Entity="agent_licensetest" />
+      <SubArea Id="agent_gradeagent" Entity="agent_gradeagent" />
+      <SubArea Id="agent_issuanceanddamageauthorization" Entity="agent_issuanceanddamageauthorization" />
+      <SubArea Id="agent_agencyauthorisation" Entity="agent_agencyauthorisation" />
+    </Group>
+  </Area>
+  <Area Id="base" Icon="/_imgs/settings_24x24.gif" ResourceId="Area_base" DescriptionResourceId="base_Area_Description" Title="اطلاعات پایه" ShowGroups="true">
+    <Group Id="baseGroup1" ResourceId="Group_baseGroup1" Title="اطلاعات پایه">
+      <SubArea Id="base_addresses" Entity="base_addresses" Title="آدرس ها" />
+      <SubArea Id="base_branch" Entity="base_branch" Title="رشته تحصیلی" />
+      <SubArea Id="base_subbranch" Entity="base_subbranch" Title="گرایش رشته" />
+      <SubArea Id="base_insuarncebranch" Entity="base_insuarncebranch" Title="رشته بیمه ای" />
+      <SubArea Id="base_insurancesubbranch" Entity="base_insurancesubbranch" Title="زیر رشته بیمه ای" />
+      <SubArea Id="base_province" Entity="base_province" Title="استان ها" />
+      <SubArea Id="base_city" Entity="base_city" Title="شهر ها" />
+      <SubArea Id="base_examinationtype" Entity="base_examinationtype" Title="نوع مدرک" />
+      <SubArea Id="base_examination" Entity="base_examination" Title="مقطع تحصیلی" />
+      <SubArea Id="base_financedomain" Entity="base_financedomain" Title="حوزه مالیاتی" />
+      <SubArea Id="base_job" Entity="base_job" Title="شغل ها" />
+      <SubArea Id="base_positions" Entity="base_positions" Title="سمت ها" />
+      <SubArea Id="account" Entity="account" Title="اشخاص حقوقی" />
+      <SubArea Id="base_accountstatus" Entity="base_accountstatus" Title="وضعیت اشخاص حقوقی" />
+      <SubArea Id="contact" Entity="contact" Title="اشخاص حقیقی" />
+    </Group>
+  </Area>
+  <Area Id="warranty" Icon="/_imgs/settings_24x24.gif" ResourceId="Area_warranty" DescriptionResourceId="warranty_Area_Description" Title="ضمانت نامه" ShowGroups="true">
+    <Group Id="warrantyGroup1" ResourceId="Group_warrantyGroup1" Title="ضمانت نامه">
+      <SubArea Id="war_warranty" Entity="war_warranty" Title="ثبت ضمانت نامه " />
+    </Group>
+    <Group Id="warrantyGroup2" ResourceId="Group_warrantyGroup2" Title="وضعیت ضمانت نامه">
+      <SubArea Id="war_warrantystatus" Entity="war_warrantystatus" Title="ثبت وضعیت های ضمانت نامه" />
+    </Group>
+    <Group Id="Extensions" ResourceId="Group_Extensions" />
+  </Area>
+  <Area Id="inquiry" Icon="/_imgs/settings_24x24.gif" ResourceId="Area_inquiry" DescriptionResourceId="inquiry_Area_Description" Title="استعلام ها" ShowGroups="true">
+    <Group Id="inquiryGroup1" ResourceId="Group_inquiryGroup1" Title="زیر رشته ها" IsProfile="false">
+      <SubArea Entity="product" Id="product" Title="ثبت زیر رشته ها" AvailableOffline="false" PassParams="false" />
+    </Group>
+    <Group Id="inquiryGroup2" ResourceId="Group_inquiryGroup2" Title="پارامترهای هر زیر رشته" IsProfile="false">
+      <SubArea Entity="productassociation" Id="productassociation" Title="ثبت پارامترهای هر زیر رشته" AvailableOffline="false" PassParams="false" />
+    </Group>
+    <Group Id="inquiryGroup3" ResourceId="Group_inquiryGroup3" Title="استعلام">
+      <SubArea Id="inq_inquiry" Entity="inq_inquiry" Title=" ثبت استعلام" />
+    </Group>
+    <Group Id="inquiryGroup4" ResourceId="Group_inquiryGroup4" Title="پارامترهای استعلام">
+      <SubArea Id="inq_inquiryparameters" Entity="inq_inquiryparameters" Title="ثبت پارامترهای استعلام" />
+    </Group>
+    <Group Id="inquiryGroup5" ResourceId="Group_inquiryGroup5" Title="فرمولها" IsProfile="false">
+      <SubArea Entity="inq_formula" Id="inq_formula" Title="ثبت فرمول ها" AvailableOffline="false" PassParams="false" />
+    </Group>
+    <Group Id="inquiryGroup6" ResourceId="Group_inquiryGroup6" Title="اطلاعات کامبو" IsProfile="false">
+      <SubArea Entity="inq_combodetail" Id="inq_combodetail" Title="ثبت اطلاعات کامبو" AvailableOffline="false" PassParams="false" />
+    </Group>
+    <Group Id="inquiryGroup7" ResourceId="Group_inquiryGroup7" Title="موجودیت تستی" IsProfile="false">
+      <SubArea Id="inq_test" Entity="inq_test" Title="ثبت رکوردهای تستی" AvailableOffline="false" PassParams="false" />
+    </Group>
+    <Group Id="inquiryGroup8" ResourceId="Group_Extensions" Title="تخفیف کاهش سرمایه" IsProfile="false">
+      <SubArea Entity="inq_discount" Id="inq_discount" Title="تخفیف کاهش سرمایه" AvailableOffline="false" PassParams="false" />
+    </Group>
+  </Area>
+  <Area Id="ResourceCenter" ResourceId="Area_ResourceCenter" Icon="/_imgs/resourcecenter_24x24.gif" DescriptionResourceId="ResourceCenter_Area_Description">
+    <Group Id="ResourceCenter">
+      <SubArea Id="nav_lc_overview" ResourceId="Homepage_LearningOverview" DescriptionResourceId="LearningOverview_SubArea_Description" Icon="/_imgs/ico_18_129.gif" Url="/resourcecenter/overview.aspx" AvailableOffline="false" />
+      <SubArea Id="nav_lc_customization" ResourceId="Homepage_LearningCustomization" DescriptionResourceId="LearningCustomization_SubArea_Description" Icon="/_imgs/area/18_settings.gif" Url="/resourcecenter/customization.aspx" AvailableOffline="false">
+        <Privilege Privilege="CreateEntity" />
+        <Privilege Entity="solution" Privilege="Create" />
+        <Privilege Privilege="ImportCustomization" />
+      </SubArea>
+    </Group>
+  </Area>
+  <Area Id="Juridical" Icon="/_imgs/settings_24x24.gif" ResourceId="Area_Juridical" DescriptionResourceId="Juridical_Area_Description" Title="دفتر حقوقی" ShowGroups="true">
+    <Group Id="Juridical" ResourceId="Group_JuridicalGroup1" Description="دعاوی" Title="دعاوی" IsProfile="true">
+      <SubArea Entity="dh_daavifile" Icon="/_imgs/ico_18_129.gif" Id="dh_daavifile" Title="تشکیل پرونده دعاوی " AvailableOffline="false" PassParams="false" />
+      <SubArea Entity="dh_sabeghe" Icon="/_imgs/area/18_settings.gif" Id="dh_sabeghe" AvailableOffline="false" PassParams="false" />
+      <SubArea Entity="dh_status" Icon="/_imgs/area/18_settings.gif" Id="dh_status" AvailableOffline="false" PassParams="false" />
+      <SubArea Entity="dh_nocent" Icon="/_imgs/area/18_settings.gif" Id="dh_nocent" AvailableOffline="false" PassParams="false" />
+      <SubArea Entity="dh_complainant" Icon="/_imgs/area/18_settings.gif" Id="dh_complainant" AvailableOffline="false" PassParams="false" />
+      <SubArea Entity="dh_caution" Icon="/_imgs/area/18_settings.gif" Id="dh_caution" AvailableOffline="false" PassParams="false" />
+      <SubArea Entity="dh_warning" Icon="/_imgs/area/18_settings.gif" Id="dh_warning" AvailableOffline="false" PassParams="false" />
+      <SubArea Entity="dh_petition" Icon="/_imgs/area/18_settings.gif" Id="dh_petition" AvailableOffline="false" PassParams="false" />
+      <SubArea Entity="dh_topicfile" Icon="/_imgs/area/18_settings.gif" Id="dh_topicfile" AvailableOffline="false" PassParams="false" />
+      <SubArea Entity="dh_experttheory" Icon="/_imgs/area/18_settings.gif" Id="dh_experttheory" AvailableOffline="false" PassParams="false" />
+      <SubArea Entity="dh_autodafe" Icon="/_imgs/area/18_settings.gif" Id="dh_autodafe" AvailableOffline="false" PassParams="false" />
+      <SubArea Entity="dh_payment" Icon="/_imgs/area/18_settings.gif" Id="dh_payment" AvailableOffline="false" PassParams="false" />
+      <SubArea Entity="dh_historychangefield" Icon="/_imgs/area/18_settings.gif" Id="dh_historychangefield" AvailableOffline="false" PassParams="false" />
+    </Group>
+    <Group Id="Juridical2" ResourceId="Group_JuridicalGroup2" Description="اظهار نظر" Title="اظهار نظر" IsProfile="false">
+      <SubArea Id="dh_assessment" Entity="dh_assessment" />
+    </Group>
+    <Group Id="Extensions" ResourceId="Group_Extensions">
+      <SubArea Id="dh_municipality" Entity="dh_municipality" />
+    </Group>
+  </Area>
+  <Area Id="AgencyManagment" Icon="/_imgs/settings_24x24.gif" ResourceId="Area_AgencyManagment" DescriptionResourceId="AgencyManagment_Area_Description" Title="امور نمایندگان" ShowGroups="true">
+    <Group Id="AgencyManagmentGroup1" ResourceId="Group_AgencyManagmentGroup1" Title="درجه بندی نماینده">
+      <SubArea Id="agent_gradeagent" Entity="agent_gradeagent" Title="درجه بندی نماینده" />
+    </Group>
+    <Group Id="AgencyManagmentGroup2" ResourceId="Group_AgencyManagmentGroup2" Title="بازدید از دفتر">
+      <SubArea Id="agent_applicantinterview" Entity="agent_applicantinterview" Title="بازدید از دفتر" />
+    </Group>
+  </Area>
+</SiteMap>

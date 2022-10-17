@@ -1,0 +1,24 @@
+function  ValidationNationalCode(ParamValue)
+{
+var NId=ParamValue;
+var a=NId.substring(9,10);
+var b=(NId.substring(0,1)*10)+(NId.substring(1,2)*9)+(NId.substring(2,3)*8)+(NId.substring(3,4)*7)+(NId.substring(4,5)*6)+
+(NId.substring(5,6)*5)+(NId.substring(6,7)*4)+(NId.substring(7,8)*3)+(NId.substring(8,9)*2);
+var c=b-(Math.floor(b/11)*11);
+if  ((a==0) && (c==0)) 
+{
+ return "true";
+}
+else if   ((a==1) && (c==1))  
+{
+return "true";
+}
+else if   ((a==11-c) && (c>1))
+{
+return "true";
+}
+else
+{
+return "false";
+}
+}

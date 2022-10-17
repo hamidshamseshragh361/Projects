@@ -1,0 +1,15 @@
+﻿Privilege="Create,Read,Write,Delete,Append,AppendTo,Assign,Share,AllowQuickCampaign,UseInternetMarketing,All"
+
+<Area Id="warranty" Icon="/_imgs/settings_24x24.gif" ResourceId="Area_warranty" DescriptionResourceId="warranty_Area_Description" Title="ضمانت نامه ها" ShowGroups="true" >
+  <Group Id="warrantyGroup1" ResourceId="Group_warrantyGroup1" Title="ضمانت نامه" >
+    <SubArea Id="war_warranty" Entity="war_warranty" Title="ثبت ضمانت نامه " >
+       <Privilege Entity="base_showsetting" Privilege="Read" />
+    </SubArea> 
+  </Group>
+
+  <Group Id="warrantyGroup2" ResourceId="Group_warrantyGroup2" Title="وضعیت ضمانت نامه" >
+    <SubArea Id="war_warrantystatus" Entity="war_warrantystatus" Title="ثبت وضعیت های ضمانت نامه" >
+       <Privilege Entity="base_showsetting" Privilege="Read" />
+    </SubArea> 
+  </Group>
+</Area>

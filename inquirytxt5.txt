@@ -1,0 +1,343 @@
+﻿var isbutton="false";
+var xmlHttp;
+
+function GetXmlHttpObject()
+ {
+    var xmlHttp = null;
+    try
+    {
+     xmlHttp = new XMLHttpRequest();
+    }
+    catch (e) 
+    {
+     try
+     {
+      xmlHttp = new ActiveXObject("Msxml2.XMLHTTP");
+      }
+     catch (e) 
+     {
+       xmlHttp = new ActiveXObject("Microsoft.XMLHTTP");
+     }
+    }
+    return xmlHttp;
+}
+
+function load()
+{
+try
+{
+var fileref = document.createElement("link"); 
+fileref.setAttribute("rel", "stylesheet"); 
+fileref.setAttribute("type", "text/css"); 
+fileref.setAttribute("href","/WebResources/base_Style");
+document.getElementsByTagName("head")[0].appendChild(fileref);
+document.getElementById("inq_fk_account").className = "readonly";
+document.getElementById("inq_name").className = "required";
+document.getElementById("inq_fk_insurancebranch").className="required";
+document.getElementById("inq_fk_product").className="required";
+document.getElementById("inq_result").className="readonly";
+document.getElementById("asia_result1").className="readonly";
+document.getElementById("asia_result2").className="readonly";
+document.getElementById("inq_waiting").className="warning";
+}
+catch(e)
+{
+}
+if(isbutton=="false")
+{
+create_button("inq_btncalculate", "ورود پارامترهاي استعلام","150px","inq_btncalculate_click");
+isbutton="true";
+}
+var mode=GPL_getFormType();
+if(mode=="create")//Load Create
+{
+GPL_setFieldValue("inq_waiting", "...لطفا صبر کنيد");
+GPL_showField("inq_waiting", false);
+Fill_issuecode();
+GPL_setFieldValue("inq_result", 0);
+GPL_setFieldValue("asia_result1", 0);
+GPL_setFieldValue("asia_result2", 0);
+GPL_disableField("inq_fk_product", true);
+document.getElementById("inq_fk_product").className="readonly";
+GPL_disableField("inq_fk_insurancebranch", true);
+document.getElementById("inq_fk_insurancebranch").className="readonly";
+GPL_showField("inq_btncalculate", false);
+alert(".لطفا پس از وارد کردن عنوان استعلام ، فرم را ذخيره نمائيد تا انتخاب رشته و زير رشته بيمه اي فعال گردد");
+}
+else //Load Update
+{
+Control_issuecode();
+GPL_disableField("inq_fk_product", false);
+document.getElementById("inq_fk_product").className="optional";
+GPL_disableField("inq_fk_insurancebranch", false);
+document.getElementById("inq_fk_insurancebranch").className="optional";
+var entityidd=Xrm.Page.data.entity.getId();
+var bundleidd=GPL_getLookupGuid("inq_fk_product");
+if(entityidd!=null && bundleidd!=null)
+{
+GPL_showField("inq_btncalculate", true);
+}
+GPL_setRequirementLevel("inq_fk_product", "required");
+document.getElementById("inq_fk_product").className="required";
+GPL_setRequirementLevel("inq_fk_insurancebranch", "required");
+document.getElementById("inq_fk_insurancebranch").className="required";
+var aa=GPL_getLookupGuid("inq_fk_insurancebranch");
+var bb=GPL_getLookupGuid("inq_fk_product");
+if(aa!=null && bb!=null)
+{
+document.getElementById("inq_fk_insurancebranch").className="readonly";
+GPL_disableField("inq_fk_insurancebranch", true);
+document.getElementById("inq_fk_product").className="readonly";
+GPL_disableField("inq_fk_product", true);
+}
+}
+}
+
+function Fill_issuecode()
+{
+var currentUserId = Xrm.Page.context.getUserId();
+var currentUserRoles = Xrm.Page.context.getUserRoles();
+if(currentUserId!=null)
+{
+    var retrieveRecordsReq = new XMLHttpRequest();
+    var serverUrl = location.protocol + "//" + location.host + "/" + Xrm.Page.context.getOrgUniqueName();
+    var ODataPath = serverUrl + "/XRMServices/2011/OrganizationData.svc/SystemUserSet";
+    ODataPath = ODataPath + "?$select=BusinessUnitId";
+    ODataPath = ODataPath + " &$filter=SystemUserId  eq  guid'"+currentUserId+"'";
+    //ODataPath = ODataPath + " &order by =BusinessUnitId desc ";
+    ODataPath = ODataPath + " &$top=1 ";    
+    retrieveRecordsReq.open("GET", ODataPath, false);
+    retrieveRecordsReq.setRequestHeader("Accept", "application/json");
+    retrieveRecordsReq.setRequestHeader("Content-Type", "application/json; charset=utf-8");
+    retrieveRecordsReq.send(null);
+    records = JSON.parse(retrieveRecordsReq.responseText).d;
+     var RequestCount = records.results.length;
+    if(records.results.length!=0)
+    {
+     var  a1= records.results[0].BusinessUnitId;                   
+     }
+//***************************************************************************************
+if(a1.Id!=null)
+{
+    var retrieveRecordsReq = new XMLHttpRequest();
+    var serverUrl = location.protocol + "//" + location.host + "/" + Xrm.Page.context.getOrgUniqueName();
+    var ODataPath = serverUrl + "/XRMServices/2011/OrganizationData.svc/BusinessUnitSet";
+    ODataPath = ODataPath + "?$select=base_IssueCode";
+    ODataPath = ODataPath + " &$filter=BusinessUnitId  eq  guid'"+a1.Id+"'";
+    ODataPath = ODataPath + " &order by =base_IssueCode desc ";
+    ODataPath = ODataPath + " &$top=1 "; 
+    retrieveRecordsReq.open("GET", ODataPath, false);
+    retrieveRecordsReq.setRequestHeader("Accept", "application/json");
+    retrieveRecordsReq.setRequestHeader("Content-Type", "application/json; charset=utf-8");
+    retrieveRecordsReq.send(null);
+    records = JSON.parse(retrieveRecordsReq.responseText).d;
+     var RequestCount = records.results.length;    
+   if(records.results.length!=0)
+    {    
+    var issuecode=records.results[0].base_IssueCode;   
+   GPL_setFieldValue("inq_issuecode", issuecode);
+    }
+ }
+}
+var IssueCode=GPL_getFieldValue("inq_issuecode");
+if(IssueCode=="11001")
+{
+GPL_disableField("inq_issuecode", false);
+GPL_setRequirementLevel("inq_issuecode", "required");
+document.getElementById("inq_issuecode").className="required";
+
+GPL_disableField("inq_fk_account", false);
+//GPL_setRequirementLevel("inq_fk_account", "required");
+//document.getElementById("inq_fk_account").className="required";
+
+}
+}
+
+function Control_issuecode()
+{
+var currentUserId = Xrm.Page.context.getUserId();
+var currentUserRoles = Xrm.Page.context.getUserRoles();
+if(currentUserId!=null)
+{
+    var retrieveRecordsReq = new XMLHttpRequest();
+    var serverUrl = location.protocol + "//" + location.host + "/" + Xrm.Page.context.getOrgUniqueName();
+    var ODataPath = serverUrl + "/XRMServices/2011/OrganizationData.svc/SystemUserSet";
+    ODataPath = ODataPath + "?$select=BusinessUnitId";
+    ODataPath = ODataPath + " &$filter=SystemUserId  eq  guid'"+currentUserId+"'";
+    //ODataPath = ODataPath + " &order by =BusinessUnitId desc ";
+    ODataPath = ODataPath + " &$top=1 ";    
+    retrieveRecordsReq.open("GET", ODataPath, false);
+    retrieveRecordsReq.setRequestHeader("Accept", "application/json");
+    retrieveRecordsReq.setRequestHeader("Content-Type", "application/json; charset=utf-8");
+    retrieveRecordsReq.send(null);
+    records = JSON.parse(retrieveRecordsReq.responseText).d;
+     var RequestCount = records.results.length;
+    if(records.results.length!=0)
+    {
+     var  a1= records.results[0].BusinessUnitId;                   
+     }
+//***************************************************************************************
+if(a1.Id!=null)
+{
+    var retrieveRecordsReq = new XMLHttpRequest();
+    var serverUrl = location.protocol + "//" + location.host + "/" + Xrm.Page.context.getOrgUniqueName();
+    var ODataPath = serverUrl + "/XRMServices/2011/OrganizationData.svc/BusinessUnitSet";
+    ODataPath = ODataPath + "?$select=base_IssueCode";
+    ODataPath = ODataPath + " &$filter=BusinessUnitId  eq  guid'"+a1.Id+"'";
+    ODataPath = ODataPath + " &order by =base_IssueCode desc ";
+    ODataPath = ODataPath + " &$top=1 "; 
+    retrieveRecordsReq.open("GET", ODataPath, false);
+    retrieveRecordsReq.setRequestHeader("Accept", "application/json");
+    retrieveRecordsReq.setRequestHeader("Content-Type", "application/json; charset=utf-8");
+    retrieveRecordsReq.send(null);
+    records = JSON.parse(retrieveRecordsReq.responseText).d;
+     var RequestCount = records.results.length;    
+   if(records.results.length!=0)
+    {    
+    var issuecode=records.results[0].base_IssueCode;   
+    if(issuecode=="11001")
+     {
+      GPL_disableField("inq_issuecode", false);
+      GPL_setRequirementLevel("inq_issuecode", "required");
+      document.getElementById("inq_issuecode").className="required";
+
+      GPL_disableField("inq_fk_account", false);
+      //GPL_setRequirementLevel("inq_fk_account", "required");
+      //document.getElementById("inq_fk_account").className="required";
+     }      
+    }
+ }
+}
+}
+
+function fk_product_change()
+{
+GPL_setFieldValue("inq_result", 0);
+GPL_setFieldValue("asia_result1", 0);
+GPL_setFieldValue("asia_result2", 0);
+GPL_showField("inq_btncalculate", false);
+var a=GPL_getLookupGuid("inq_fk_insurancebranch");
+if(a==null || a.toString().trim()=="")
+{
+GPL_clearLookupValue("inq_fk_product");
+alert(".ابتدا رشته بيمه اي را انتخاب کنيد");
+return;
+}
+  xmlHttp = GetXmlHttpObject();
+    if (xmlHttp==null) {
+        alert(".اين مرورگر آژاکس را پشتيباني نمي کند");
+        return;
+    }
+var entityid=Xrm.Page.data.entity.getId();
+var bundleid=GPL_getLookupGuid("inq_fk_product");
+if(entityid!=null && bundleid!=null)
+{
+GPL_showField("inq_waiting", true);
+GPL_showField("inq_btncalculate", false);
+var purl,ppurl,ppurl2,ppurl21;
+purl=window.location.href;
+ppurl=purl.toString().split("/");
+if(ppurl[2].indexOf(":")==-1 )
+{
+ppurl2=ppurl[2]+":8080"
+}
+else
+{
+ppurl21=ppurl[2].split(":");
+ppurl2=ppurl21[0];
+}   
+    var url= ""+ppurl[0]+"//"+ppurl2+"/inquirysystem/webui/inquiryformhelper.aspx";  
+    url=url+"?queryno=1&purl="+purl+"&entityid="+entityid+"&bundleid="+bundleid+"";
+    url=url+"&sid="+Math.random();
+    //alert(url);
+    xmlHttp.onreadystatechange = stateChanged;
+    xmlHttp.open("GET",url,true);
+    xmlHttp.send(null);
+}
+}
+
+function stateChanged() 
+{
+  var s;
+  if (xmlHttp.readyState==4) 
+  {
+    GPL_showField("inq_waiting", false);
+    GPL_showField("inq_btncalculate", true);
+     s= xmlHttp.responseText;
+     alert(s);
+     Xrm.Page.data.save();
+     Xrm.Page.data.refresh();
+var aa=GPL_getLookupGuid("inq_fk_insurancebranch");
+var bb=GPL_getLookupGuid("inq_fk_product");
+if(aa!=null && bb!=null)
+{
+document.getElementById("inq_fk_insurancebranch").className="readonly";
+GPL_disableField("inq_fk_insurancebranch", true);
+document.getElementById("inq_fk_product").className="readonly";
+GPL_disableField("inq_fk_product", true);
+}
+}    
+}
+
+function inq_btncalculate_click()
+{
+var mode=GPL_getFormType();
+if(mode=="create")
+{
+alert(".ابتدا فرم را ذخيره کرده و سپس دکمه ورود پارامترهاي استعلام را فشار دهيد");
+return;
+}
+var entityid=Xrm.Page.data.entity.getId();
+var insurancebranchid=GPL_getLookupGuid("inq_fk_insurancebranch");
+var bundleid=GPL_getLookupGuid("inq_fk_product");
+if(entityid==null || insurancebranchid==null || bundleid==null)
+{
+alert(".ابتدا رشته و زير رشته بيمه اي را انتخاب کنيد");
+return;
+}
+var purl,ppurl,ppurl2,ppurl21;
+purl=window.location.href;
+ppurl=purl.toString().split("/");
+if(ppurl[2].indexOf(":")==-1 )
+{
+ppurl2=ppurl[2]+":8080"
+}
+else
+{
+ppurl21=ppurl[2].split(":");
+ppurl2=ppurl21[0];
+}
+//window.open(''+ppurl[0]+'//'+ppurl2+'/inquirysystem/webui/inquiryformedit.aspx?purl='+purl+'&entityid='+entityid+'&bundleid='+bundleid+'', "_parent", "toolbar=yes, scrollbars=yes, resizable=yes, top=0, left=0, width=1000, height=800");
+window.open(''+ppurl[0]+'//'+ppurl2+'/inquirysystem/webui/inquiryformedit.aspx?purl='+purl+'&entityid='+entityid+'&insurancebranchid='+insurancebranchid
++'&bundleid='+bundleid+'', "_parent");
+}
+
+function create_button(fldName, btnLabel, btnWidth, evt) 
+{
+try
+{
+var btn = '<button class="ms-crm-Button" onclick="'+evt+'()"  style="width:'+btnWidth+';font-family:Tahoma;font-size:8pt" ToolTip="'+btnLabel+'"  id="'+fldName+'" onmouseover="Mscrm.ButtonUtils.hoverOn(this);"  onmouseout="Mscrm.ButtonUtils.hoverOff(this);" >'+btnLabel+' </button>';
+var ctrl = null;
+try 
+{
+ctrl = Xrm.Page.ui.controls.get(fldName).get_chromeElement()[0];
+} 
+catch (e) 
+{
+ctrl = Xrm.Page.ui.controls.get(fldName)._control.get_element();
+}
+ctrl.innerHTML+= btn;
+ctrl.children[0].style.display = 'none';
+ctrl.children[1].style.display = 'none';
+ctrl.children[0].attachEvent('onclick',evt);
+}
+catch(e)
+{
+//alert(e.description);
+}
+}
+
+function fk_insurancebranchchange()
+{
+var a=GPL_getLookupGuid("inq_fk_insurancebranch");
+}
