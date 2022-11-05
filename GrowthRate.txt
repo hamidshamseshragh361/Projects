@@ -1,0 +1,6 @@
+this formula just work annually
+------------------------------------------
+GrowthRate = 
+VAR  X=Value(MAX(FinalFactAmarBNFactHVNew[F_Year]))-1
+VAR  Y=CALCULATE(sum(FinalFactAmarBNFactHVNew[مبلغ صدور]),Value(FinalFactAmarBNFactHVNew[F_Year])=Value(X))
+RETURN  IF(Y<>0,VALUE(DIVIDE(sum(FinalFactAmarBNFactHVNew[مبلغ صدور]),Value(Y))-1)*100)
